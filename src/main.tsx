@@ -1,10 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { MantineProvider } from "@mantine/core";
 import WiiireApp from "./app/WiiireApp.tsx";
-import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <WiiireApp />
+    <MantineProvider withGlobalStyles withNormalizeCSS>
+      <WiiireApp />
+    </MantineProvider>
   </StrictMode>
 );

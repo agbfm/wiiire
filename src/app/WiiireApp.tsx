@@ -1,35 +1,36 @@
 import { useState } from "react";
-import reactLogo from "./../assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./WiiireApp.css";
+import FloatingMenu from "./../components/FloatingMenu";
+import Canvas from "./../components/Canvas";
+import { ArtBoardLayer } from "./../components/objects/ArtBoard";
+import { v4 as uuid } from "uuid";
 
 const WiiireApp = () => {
-  const [count, setCount] = useState(0);
+  const [showMenu, toggleMenu] = useState(true);
+  const [artboards, setArtboards] = useState<ArtBoardLayer[]>([]);
+
+  const handleNewArtBoard = (title: string) => {
+    const artboard = {
+      id: uuid(),
+      title,
+    };
+    setArtboards([...artboards, artboard]);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div
+      style={{
+        backgroundColor: "#e9ecef",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      <Canvas artboards={artboards} />
+      <FloatingMenu
+        visible={showMenu}
+        onNewArtBoard={handleNewArtBoard}
+        onToggle={(visible: boolean) => toggleMenu(visible)}
+      />
+    </div>
   );
 };
-
 export default WiiireApp;
