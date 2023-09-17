@@ -1,18 +1,23 @@
 import { Stage } from "react-konva";
-import { ArtBoard, ArtBoardLayer } from "./objects/ArtBoard";
-import { useState } from "react";
+import { ArtBoard, IArtBoard } from "./objects/ArtBoard";
+import { KonvaEventObject } from "konva/lib/Node";
 
 type Props = {
-  artboards: ArtBoardLayer[];
+  artboards: IArtBoard[];
+  selectedArtBoard: IArtBoard | null;
+  onArtBoardSelect: (artboard: IArtBoard | null) => void;
 };
 
 const Canvas = (props: Props) => {
-  const [selectedArtBoard, setSelectedArtBoard] =
-    useState<ArtBoardLayer | null>(null);
+  const handleOnStageClick = (e: KonvaEventObject<MouseEvent>) => {
+    const emptySpace = e.target === e.target.getStage();
+    if (emptySpace) {
+      props.onArtBoardSelect(null);
+    }
+  };
 
-  const handleOnStageClick = () => setSelectedArtBoard(null);
-  const handleOnArtBoardSelect = (artboard: ArtBoardLayer) =>
-    setSelectedArtBoard(artboard);
+  const handleOnArtBoardSelect = (artboard: IArtBoard) =>
+    props.onArtBoardSelect(artboard);
 
   return (
     <Stage
@@ -20,11 +25,14 @@ const Canvas = (props: Props) => {
       height={window.innerHeight}
       onClick={handleOnStageClick}
     >
-      {props.artboards.map((artboard: ArtBoardLayer) => (
+      {props.artboards.map((artboard: IArtBoard) => (
         <ArtBoard
+          key={artboard.id}
           selected={
-            selectedArtBoard !== null && selectedArtBoard.id === artboard.id
+            props.selectedArtBoard !== null &&
+            props.selectedArtBoard.id === artboard.id
           }
+          size={artboard.size}
           title={artboard.title}
           onSelect={() => handleOnArtBoardSelect(artboard)}
         />
