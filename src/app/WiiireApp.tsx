@@ -111,7 +111,9 @@ const WiiireApp = () => {
       />
       <ContextMenu
         coordinates={contextMenuCoords}
+        selectedArtBoard={selectedArtBoard}
         visible={contextMenuCoords !== null}
+        onDeleteArtBoard={handleDeleteArtBoard}
         onNewArtBoard={() => toggleNewArtBoardModal(true)}
         onToggle={(visible: boolean) =>
           !visible && toggleContextMenu({ x: null, y: null })

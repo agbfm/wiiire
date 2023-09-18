@@ -1,16 +1,30 @@
 import { Affix, Menu, rem } from "@mantine/core";
-import { IconSettings, IconNewSection, IconTrash } from "@tabler/icons-react";
+import {
+  IconRepeat,
+  IconSettings,
+  IconNewSection,
+  IconTrash,
+} from "@tabler/icons-react";
+import { IArtBoard } from "./objects/ArtBoard";
 
 export type Coordinates = { x: number | null; y: number | null };
 
 type Props = {
   coordinates: Coordinates | null;
+  selectedArtBoard: IArtBoard | null;
   visible: boolean;
+  onDeleteArtBoard: (artboard: IArtBoard) => void;
   onNewArtBoard: () => void;
   onToggle: (visible: boolean) => void;
 };
 
 const ContextMenu = (props: Props) => {
+  const handleOnDeleteArtBoard = () => {
+    if (props.selectedArtBoard) {
+      props.onDeleteArtBoard(props.selectedArtBoard);
+    }
+  };
+
   if (props.coordinates === null) {
     return null;
   }
@@ -25,19 +39,32 @@ const ContextMenu = (props: Props) => {
         onChange={props.onToggle}
       >
         <Menu.Dropdown>
-          <Menu.Label>Application</Menu.Label>
           <Menu.Item
             icon={<IconNewSection size={20} />}
             onClick={props.onNewArtBoard}
           >
             New Art Board
           </Menu.Item>
-          <Menu.Item icon={<IconSettings size={20} />}>Settings</Menu.Item>
 
           <Menu.Divider />
 
+          {props.selectedArtBoard && (
+            <>
+              <Menu.Label>Selected Art Board</Menu.Label>
+              <Menu.Item icon={<IconSettings size={20} />}>Duplicate</Menu.Item>
+              <Menu.Item
+                color="red"
+                icon={<IconTrash size={20} />}
+                onClick={handleOnDeleteArtBoard}
+              >
+                Delete
+              </Menu.Item>
+              <Menu.Divider />
+            </>
+          )}
+
           <Menu.Label>Danger zone</Menu.Label>
-          <Menu.Item color="red" icon={<IconTrash size={20} />}>
+          <Menu.Item color="red" icon={<IconRepeat size={20} />}>
             Reset canvas
           </Menu.Item>
         </Menu.Dropdown>
