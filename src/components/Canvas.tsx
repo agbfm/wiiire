@@ -3,6 +3,7 @@ import { Stage } from "react-konva";
 import { ArtBoard, IArtBoard } from "./objects/ArtBoard";
 import { KonvaEventObject } from "konva/lib/Node";
 import Konva from "konva";
+import { Coordinates } from "./ContextMenu";
 
 const SCALE_AMOUNT = 1.05;
 
@@ -11,6 +12,7 @@ type Props = {
   selectedArtBoard: IArtBoard | null;
   zoom: number;
   onArtBoardSelect: (artboard: IArtBoard | null) => void;
+  onToggleContextMenu: (coordinates: Coordinates | null) => void;
   onZoomChange: (zoom: number) => void;
 };
 
@@ -18,9 +20,34 @@ const Canvas = (props: Props) => {
   const ref = useRef<Konva.Stage>(null);
 
   const handleStageClick = (e: KonvaEventObject<MouseEvent>) => {
+    console.log("mouse click: ", e.evt.button);
     const emptySpace = e.target === e.target.getStage();
     if (emptySpace) {
       props.onArtBoardSelect(null);
+    }
+  };
+
+  const handleStageMouseDown = (e: KonvaEventObject<MouseEvent>) => {
+    console.log("mouse down: ", e.evt.button);
+    if (e.evt.button === 0) {
+      // left click
+      props.onToggleContextMenu(null);
+    } else if (e.evt.button === 1) {
+      // middle mouse button
+    } else if (e.evt.button === 2) {
+      // right click
+      const stage = ref.current;
+      if (!stage) {
+        return;
+      }
+      const pointer = stage.getRelativePointerPosition();
+      if (pointer === null) {
+        return;
+      }
+
+      props.onToggleContextMenu({ x: pointer.x, y: pointer.y });
+    } else {
+      e.target.preventDefault();
     }
   };
 
@@ -57,7 +84,6 @@ const Canvas = (props: Props) => {
       stage.position(newPosition);
     }
 
-    console.log(scale);
     props.onZoomChange(scale * 100);
   };
 
@@ -66,9 +92,11 @@ const Canvas = (props: Props) => {
 
   return (
     <Stage
+      draggable
       width={window.innerWidth}
       height={window.innerHeight}
       onClick={handleStageClick}
+      onMouseDown={handleStageMouseDown}
       onWheel={handleStageScroll}
       ref={ref}
       scaleX={props.zoom / 100}
