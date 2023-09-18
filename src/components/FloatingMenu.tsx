@@ -21,14 +21,15 @@ import ArtBoardTitleField from "./ArtBoardTitleField";
 type Props = {
   selectedArtBoard: IArtBoard | null;
   visible: boolean;
+  zoom: number;
   onArtBoardSizeChange: (size: ArtBoardSize) => void;
   onArtBoardTitleChange: (title: string) => void;
   onNewArtBoard: (title: string) => void;
   onToggle: (value: boolean) => void;
+  onZoomChange: (value: number) => void;
 };
 
 const FloatingMenu = (props: Props) => {
-  const [zoom, setZoom] = useState(100);
   const [newArtBoardTitle, setNewArtBoardTitle] = useState<string>("");
   const [showInputModal, { open, close }] = useDisclosure(false);
 
@@ -121,8 +122,8 @@ const FloatingMenu = (props: Props) => {
             </Flex>
           )}
           <ZoomMenu
-            value={zoom}
-            onZoomChange={(value: number) => setZoom(Math.ceil(value))}
+            value={props.zoom}
+            onZoomChange={(value: number) => props.onZoomChange(value)}
           />
         </Card>
       </Affix>

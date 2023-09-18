@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 
 const WiiireApp = () => {
   const [showMenu, toggleMenu] = useState(true);
+  const [zoom, setZoom] = useState(100);
   const [artBoards, setArtBoards] = useState<IArtBoard[]>([]);
   const [selectedArtBoard, setSelectedArtBoard] = useState<IArtBoard | null>(
     null
@@ -55,6 +56,8 @@ const WiiireApp = () => {
     setArtBoards(updatedArtBoards);
   };
 
+  const handleZoomChange = (value: number) => setZoom(Math.ceil(value));
+
   return (
     <div
       style={{
@@ -66,15 +69,19 @@ const WiiireApp = () => {
       <Canvas
         artboards={artBoards}
         selectedArtBoard={selectedArtBoard}
+        zoom={zoom}
         onArtBoardSelect={handleArtBoardSelect}
+        onZoomChange={handleZoomChange}
       />
       <FloatingMenu
         selectedArtBoard={selectedArtBoard}
         visible={showMenu}
+        zoom={zoom}
         onArtBoardSizeChange={handleArtBoardSizeChange}
         onArtBoardTitleChange={handleArtBoardTitleChange}
         onNewArtBoard={handleNewArtBoard}
         onToggle={(visible: boolean) => toggleMenu(visible)}
+        onZoomChange={handleZoomChange}
       />
     </div>
   );
