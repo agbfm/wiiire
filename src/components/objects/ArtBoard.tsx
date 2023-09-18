@@ -33,6 +33,7 @@ type Props = {
   selected: boolean;
   size: ArtBoardSize;
   title: string;
+  onDelete?: () => void;
   onSelect: () => void;
 };
 
@@ -64,9 +65,9 @@ const ArtBoard = (props: Props) => {
         shadowBlur={3}
         shadowColor="#cccccc"
         fill="#ffffff"
-        onClick={handleClick}
         stroke={props.selected ? "#4dabf7" : "#ced4da"}
         strokeWidth={1}
+        onClick={handleClick}
       />
     </Layer>
   );

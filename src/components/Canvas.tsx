@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { KeyboardEvent, useRef } from "react";
 import { Stage } from "react-konva";
 import { ArtBoard, IArtBoard } from "./objects/ArtBoard";
 import { KonvaEventObject } from "konva/lib/Node";
@@ -12,6 +12,7 @@ type Props = {
   selectedArtBoard: IArtBoard | null;
   zoom: number;
   onArtBoardSelect: (artboard: IArtBoard | null) => void;
+  onDeleteArtBoard: (artboard: IArtBoard) => void;
   onToggleContextMenu: (coordinates: Coordinates | null) => void;
   onZoomChange: (zoom: number) => void;
 };
@@ -90,31 +91,48 @@ const Canvas = (props: Props) => {
   const handleOnArtBoardSelect = (artboard: IArtBoard) =>
     props.onArtBoardSelect(artboard);
 
+  const handleOnKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    console.log(e);
+
+    if (!props.selectedArtBoard) {
+      return;
+    }
+
+    if (e.key === "Backspace" || e.key === "Delete") {
+      props.onDeleteArtBoard(props.selectedArtBoard);
+    }
+    // TODO: move artboard with arrow keys
+  };
+
   return (
-    <Stage
-      draggable
-      width={window.innerWidth}
-      height={window.innerHeight}
-      onClick={handleStageClick}
-      onMouseDown={handleStageMouseDown}
-      onWheel={handleStageScroll}
-      ref={ref}
-      scaleX={props.zoom / 100}
-      scaleY={props.zoom / 100}
-    >
-      {props.artboards.map((artboard: IArtBoard) => (
-        <ArtBoard
-          key={artboard.id}
-          selected={
-            props.selectedArtBoard !== null &&
-            props.selectedArtBoard.id === artboard.id
-          }
-          size={artboard.size}
-          title={artboard.title}
-          onSelect={() => handleOnArtBoardSelect(artboard)}
-        />
-      ))}
-    </Stage>
+    <div onKeyDown={handleOnKeyDown} tabIndex={1}>
+      <Stage
+        draggable
+        width={window.innerWidth}
+        height={window.innerHeight}
+        onClick={handleStageClick}
+        onMouseDown={handleStageMouseDown}
+        onWheel={handleStageScroll}
+        ref={ref}
+        scaleX={props.zoom / 100}
+        scaleY={props.zoom / 100}
+      >
+        {props.artboards.map((artboard: IArtBoard) => (
+          <ArtBoard
+            key={artboard.id}
+            selected={
+              props.selectedArtBoard !== null &&
+              props.selectedArtBoard.id === artboard.id
+            }
+            size={artboard.size}
+            title={artboard.title}
+            onSelect={() => handleOnArtBoardSelect(artboard)}
+          />
+        ))}
+      </Stage>
+    </div>
   );
 };
 

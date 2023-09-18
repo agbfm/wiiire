@@ -20,16 +20,25 @@ const WiiireApp = () => {
 
   const handleNewArtBoard = (title: string) => {
     toggleNewArtBoardModal(false);
-    const artboard: IArtBoard = {
+    const artBoard: IArtBoard = {
       id: uuid(),
       size: ArtBoardSize.MOBILE,
       title,
     };
-    setArtBoards([...artBoards, artboard]);
+    setArtBoards([...artBoards, artBoard]);
   };
 
   const handleArtBoardSelect = (artBoard: IArtBoard | null) =>
     setSelectedArtBoard(artBoard);
+
+  const handleDeleteArtBoard = (artBoard: IArtBoard) => {
+    const filtered = artBoards.filter((a: IArtBoard) => a.id !== artBoard.id);
+    setArtBoards(filtered);
+
+    if (selectedArtBoard && selectedArtBoard.id === artBoard.id) {
+      setSelectedArtBoard(null);
+    }
+  };
 
   const handleArtBoardSizeChange = (size: ArtBoardSize) => {
     if (!selectedArtBoard) {
@@ -84,6 +93,7 @@ const WiiireApp = () => {
         selectedArtBoard={selectedArtBoard}
         zoom={zoom}
         onArtBoardSelect={handleArtBoardSelect}
+        onDeleteArtBoard={handleDeleteArtBoard}
         onToggleContextMenu={(coordinates: Coordinates | null) =>
           toggleContextMenu(coordinates)
         }
