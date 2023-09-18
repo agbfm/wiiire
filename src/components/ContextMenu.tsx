@@ -14,6 +14,7 @@ type Props = {
   selectedArtBoard: IArtBoard | null;
   visible: boolean;
   onDeleteArtBoard: (artboard: IArtBoard) => void;
+  onDuplicateArtBoard: (artboard: IArtBoard) => void;
   onNewArtBoard: () => void;
   onToggle: (visible: boolean) => void;
 };
@@ -22,6 +23,12 @@ const ContextMenu = (props: Props) => {
   const handleOnDeleteArtBoard = () => {
     if (props.selectedArtBoard) {
       props.onDeleteArtBoard(props.selectedArtBoard);
+    }
+  };
+
+  const handleOnDuplicateArtBoard = () => {
+    if (props.selectedArtBoard) {
+      props.onDuplicateArtBoard(props.selectedArtBoard);
     }
   };
 
@@ -51,7 +58,12 @@ const ContextMenu = (props: Props) => {
           {props.selectedArtBoard && (
             <>
               <Menu.Label>Selected Art Board</Menu.Label>
-              <Menu.Item icon={<IconSettings size={20} />}>Duplicate</Menu.Item>
+              <Menu.Item
+                icon={<IconSettings size={20} />}
+                onClick={handleOnDuplicateArtBoard}
+              >
+                Duplicate
+              </Menu.Item>
               <Menu.Item
                 color="red"
                 icon={<IconTrash size={20} />}

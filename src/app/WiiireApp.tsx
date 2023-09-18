@@ -40,6 +40,16 @@ const WiiireApp = () => {
     }
   };
 
+  const handleOnDuplicateArtBoard = (artBoard: IArtBoard) => {
+    const duplicate = {
+      ...artBoard,
+      id: uuid(),
+    };
+
+    setArtBoards([...artBoards, duplicate]);
+    setSelectedArtBoard(duplicate);
+  };
+
   const handleArtBoardSizeChange = (size: ArtBoardSize) => {
     if (!selectedArtBoard) {
       return;
@@ -114,6 +124,7 @@ const WiiireApp = () => {
         selectedArtBoard={selectedArtBoard}
         visible={contextMenuCoords !== null}
         onDeleteArtBoard={handleDeleteArtBoard}
+        onDuplicateArtBoard={handleOnDuplicateArtBoard}
         onNewArtBoard={() => toggleNewArtBoardModal(true)}
         onToggle={(visible: boolean) =>
           !visible && toggleContextMenu({ x: null, y: null })
