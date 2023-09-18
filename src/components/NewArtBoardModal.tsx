@@ -17,17 +17,23 @@ const NewArtBoardModal = (props: Props) => {
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setTitle(event.target.value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setTitle(e.target.value);
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleOnCreateClick();
+    }
+  };
 
   const handleOnCloseClick = () => {
     props.onCancel();
-    setTitle("");
+    setTimeout(() => setTitle(""), 1000);
   };
 
   const handleOnCreateClick = () => {
     props.onCreate(title);
-    setTitle("");
+    setTimeout(() => setTitle(""), 1000);
   };
 
   return (
@@ -46,6 +52,7 @@ const NewArtBoardModal = (props: Props) => {
         withAsterisk
         value={title}
         onChange={handleInputChange}
+        onKeyDown={handleInputKeyDown}
         mb={rem(10)}
         tabIndex={1}
         ref={ref}
