@@ -6,8 +6,10 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { Coordinates } from "./../types/coordinates";
-import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
-import { duplicateArtBoard } from "../utils/artboards";
+import {
+  useArtBoardActions,
+  useSelectedArtBoard,
+} from "./../stores/useArtBoardStore";
 
 type Props = {
   coordinates: Coordinates | null;
@@ -17,18 +19,9 @@ type Props = {
 };
 
 const ContextMenu = (props: Props) => {
-  const selectedArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.selectedArtBoard
-  );
-  const addArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.addArtBoard
-  );
-  const removeArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.removeArtBoard
-  );
-  const selectArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.setSelectedArtBoard
-  );
+  const selectedArtBoard = useSelectedArtBoard();
+  const { duplicateArtBoard, removeArtBoard, removeAllArtBoards } =
+    useArtBoardActions();
 
   const handleOnDeleteArtBoard = () => {
     if (selectedArtBoard === null) {
@@ -43,10 +36,10 @@ const ContextMenu = (props: Props) => {
       return;
     }
 
-    const duplicate = duplicateArtBoard(selectedArtBoard);
-    selectArtBoard(duplicate);
-    addArtBoard(duplicate);
+    duplicateArtBoard(selectedArtBoard);
   };
+
+  const handleOnResetCanvas = () => removeAllArtBoards();
 
   if (props.coordinates === null) {
     return null;
@@ -92,7 +85,11 @@ const ContextMenu = (props: Props) => {
           )}
 
           <Menu.Label>Danger zone</Menu.Label>
-          <Menu.Item color="red" icon={<IconRepeat size={20} />}>
+          <Menu.Item
+            color="red"
+            icon={<IconRepeat size={20} />}
+            onClick={() => handleOnResetCanvas()}
+          >
             Reset canvas
           </Menu.Item>
         </Menu.Dropdown>

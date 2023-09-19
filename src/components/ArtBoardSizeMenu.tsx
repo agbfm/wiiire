@@ -1,16 +1,14 @@
 import { SegmentedControl } from "@mantine/core";
 import { useState } from "react";
-import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
-import { ArtBoard, ArtBoardSize } from "../types/artboard";
+import { useArtBoardActions } from "./../stores/useArtBoardStore";
+import { ArtBoard, ArtBoardSize } from "./../types/artboard";
 
 type Props = {
   artBoard: ArtBoard;
 };
 
 const ArtBoardSizeMenu = (props: Props) => {
-  const updateArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.updateArtBoard
-  );
+  const { updateArtBoard } = useArtBoardActions();
 
   const [size, setSize] = useState<ArtBoardSize>(props.artBoard.size);
 

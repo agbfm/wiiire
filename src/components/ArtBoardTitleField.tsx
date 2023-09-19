@@ -1,16 +1,14 @@
 import { TextInput } from "@mantine/core";
 import { ChangeEvent, useState } from "react";
-import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
-import { ArtBoard } from "../types/artboard";
+import { useArtBoardActions } from "./../stores/useArtBoardStore";
+import { ArtBoard } from "./../types/artboard";
 
 type Props = {
   artBoard: ArtBoard;
 };
 
 const ArtBoardTitleField = (props: Props) => {
-  const updateArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.updateArtBoard
-  );
+  const { updateArtBoard } = useArtBoardActions();
 
   const [title, setTitle] = useState<string>(props.artBoard.title);
 

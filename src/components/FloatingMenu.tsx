@@ -11,7 +11,7 @@ import { IconDeviceDesktopPlus } from "@tabler/icons-react";
 import ZoomMenu from "./ZoomMenu";
 import ArtBoardSizeMenu from "./ArtBoardSizeMenu";
 import ArtBoardTitleField from "./ArtBoardTitleField";
-import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
+import { useSelectedArtBoard } from "./../stores/useArtBoardStore";
 
 type Props = {
   visible: boolean;
@@ -22,9 +22,7 @@ type Props = {
 };
 
 const FloatingMenu = (props: Props) => {
-  const selectedArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.selectedArtBoard
-  );
+  const selectedArtBoard = useSelectedArtBoard();
 
   if (!props.visible) {
     return null;

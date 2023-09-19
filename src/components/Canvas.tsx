@@ -5,7 +5,11 @@ import Konva from "konva";
 import { ArtBoardLayer } from "./objects/ArtBoardLayer";
 import { ArtBoard } from "./../types/artboard";
 import { Coordinates } from "./../types/coordinates";
-import { ArtBoardState, useArtBoardStore } from "./../stores/useArtBoardStore";
+import {
+  useArtBoardActions,
+  useArtBoards,
+  useSelectedArtBoard,
+} from "./../stores/useArtBoardStore";
 
 const SCALE_AMOUNT = 1.05;
 
@@ -17,16 +21,9 @@ type Props = {
 
 const Canvas = (props: Props) => {
   const ref = useRef<Konva.Stage>(null);
-  const artBoards = useArtBoardStore((state: ArtBoardState) => state.artBoards);
-  const selectedArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.selectedArtBoard
-  );
-  const selectArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.setSelectedArtBoard
-  );
-  const removeArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.removeArtBoard
-  );
+  const artBoards = useArtBoards();
+  const selectedArtBoard = useSelectedArtBoard();
+  const { selectArtBoard, removeArtBoard } = useArtBoardActions();
 
   const handleStageClick = (e: KonvaEventObject<MouseEvent>) => {
     const emptySpace = e.target === e.target.getStage();
@@ -96,8 +93,6 @@ const Canvas = (props: Props) => {
 
   const handleOnKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
-
-    console.log(e);
 
     if (!selectedArtBoard) {
       return;

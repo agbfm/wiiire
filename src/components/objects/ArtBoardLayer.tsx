@@ -2,22 +2,18 @@ import { KonvaEventObject } from "konva/lib/Node";
 import { useState } from "react";
 import { Layer, Rect, Text } from "react-konva";
 import { ArtBoard, getDimensionsForSize } from "../../types/artboard";
-import { ArtBoardState, useArtBoardStore } from "../../stores/useArtBoardStore";
+import {
+  useArtBoardActions,
+  useSelectedArtBoard,
+} from "./../../stores/useArtBoardStore";
 
 type Props = {
   artBoard: ArtBoard;
 };
 
 const ArtBoardLayer = (props: Props) => {
-  const selectedArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.selectedArtBoard
-  );
-  const selectArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.setSelectedArtBoard
-  );
-  const updateArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.updateArtBoard
-  );
+  const selectedArtBoard = useSelectedArtBoard();
+  const { selectArtBoard, updateArtBoard } = useArtBoardActions();
 
   const { artBoard } = props;
   const [coords, setCoords] = useState(artBoard.coordinates);
@@ -32,9 +28,7 @@ const ArtBoardLayer = (props: Props) => {
     updateArtBoard(updated);
   };
 
-  const handleOnSelect = () => {
-    selectArtBoard(artBoard);
-  };
+  const handleOnSelect = () => selectArtBoard(artBoard);
 
   const dimensions = getDimensionsForSize(artBoard.size);
 

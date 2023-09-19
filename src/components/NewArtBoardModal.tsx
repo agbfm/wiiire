@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Button, Flex, Modal, rem, TextInput } from "@mantine/core";
 import { createArtBoard } from "../utils/artboards";
 import { ArtBoard } from "../types/artboard";
-import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
+import { useArtBoardActions } from "../stores/useArtBoardStore";
 
 type Props = {
   visible: boolean;
@@ -12,9 +12,7 @@ type Props = {
 const NewArtBoardModal = (props: Props) => {
   const ref = useRef<HTMLInputElement>(null);
 
-  const addArtBoard = useArtBoardStore(
-    (state: ArtBoardState) => state.addArtBoard
-  );
+  const { addArtBoard } = useArtBoardActions();
 
   const [title, setTitle] = useState<string>("");
 
