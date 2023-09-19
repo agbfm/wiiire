@@ -1,14 +1,21 @@
 import { useRef, useState } from "react";
 import { Button, Flex, Modal, rem, TextInput } from "@mantine/core";
+import { createArtBoard } from "../utils/artboards";
+import { ArtBoard } from "../types/artboard";
+import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
 
 type Props = {
   visible: boolean;
-  onCancel: () => void;
-  onCreate: (title: string) => void;
+  onClose: () => void;
 };
 
 const NewArtBoardModal = (props: Props) => {
   const ref = useRef<HTMLInputElement>(null);
+
+  const addArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.addArtBoard
+  );
+
   const [title, setTitle] = useState<string>("");
 
   const handleOnLoad = () => {
@@ -27,13 +34,14 @@ const NewArtBoardModal = (props: Props) => {
   };
 
   const handleOnCloseClick = () => {
-    props.onCancel();
+    props.onClose();
     setTimeout(() => setTitle(""), 1000);
   };
 
   const handleOnCreateClick = () => {
-    props.onCreate(title);
-    setTimeout(() => setTitle(""), 1000);
+    const artBoard: ArtBoard = createArtBoard(title);
+    addArtBoard(artBoard);
+    handleOnCloseClick();
   };
 
   return (

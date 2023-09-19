@@ -5,31 +5,47 @@ import {
   IconNewSection,
   IconTrash,
 } from "@tabler/icons-react";
-import { IArtBoard } from "./objects/ArtBoard";
-
-export type Coordinates = { x: number | null; y: number | null };
+import { Coordinates } from "./../types/coordinates";
+import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
+import { duplicateArtBoard } from "../utils/artboards";
 
 type Props = {
   coordinates: Coordinates | null;
-  selectedArtBoard: IArtBoard | null;
   visible: boolean;
-  onDeleteArtBoard: (artboard: IArtBoard) => void;
-  onDuplicateArtBoard: (artboard: IArtBoard) => void;
   onNewArtBoard: () => void;
   onToggle: (visible: boolean) => void;
 };
 
 const ContextMenu = (props: Props) => {
+  const selectedArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.selectedArtBoard
+  );
+  const addArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.addArtBoard
+  );
+  const removeArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.removeArtBoard
+  );
+  const selectArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.setSelectedArtBoard
+  );
+
   const handleOnDeleteArtBoard = () => {
-    if (props.selectedArtBoard) {
-      props.onDeleteArtBoard(props.selectedArtBoard);
+    if (selectedArtBoard === null) {
+      return;
     }
+
+    removeArtBoard(selectedArtBoard);
   };
 
   const handleOnDuplicateArtBoard = () => {
-    if (props.selectedArtBoard) {
-      props.onDuplicateArtBoard(props.selectedArtBoard);
+    if (selectedArtBoard === null) {
+      return;
     }
+
+    const duplicate = duplicateArtBoard(selectedArtBoard);
+    selectArtBoard(duplicate);
+    addArtBoard(duplicate);
   };
 
   if (props.coordinates === null) {
@@ -55,12 +71,12 @@ const ContextMenu = (props: Props) => {
 
           <Menu.Divider />
 
-          {props.selectedArtBoard && (
+          {selectedArtBoard && (
             <>
               <Menu.Label>Selected Art Board</Menu.Label>
               <Menu.Item
                 icon={<IconSettings size={20} />}
-                onClick={handleOnDuplicateArtBoard}
+                onClick={() => handleOnDuplicateArtBoard()}
               >
                 Duplicate
               </Menu.Item>

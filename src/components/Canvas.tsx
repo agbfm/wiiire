@@ -1,35 +1,41 @@
 import { KeyboardEvent, useRef } from "react";
 import { Stage } from "react-konva";
-import { ArtBoard, IArtBoard } from "./objects/ArtBoard";
 import { KonvaEventObject } from "konva/lib/Node";
 import Konva from "konva";
-import { Coordinates } from "./ContextMenu";
+import { ArtBoardLayer } from "./objects/ArtBoardLayer";
+import { ArtBoard } from "./../types/artboard";
+import { Coordinates } from "./../types/coordinates";
+import { ArtBoardState, useArtBoardStore } from "./../stores/useArtBoardStore";
 
 const SCALE_AMOUNT = 1.05;
 
 type Props = {
-  artboards: IArtBoard[];
-  selectedArtBoard: IArtBoard | null;
   zoom: number;
-  onArtBoardSelect: (artboard: IArtBoard | null) => void;
-  onDeleteArtBoard: (artboard: IArtBoard) => void;
   onToggleContextMenu: (coordinates: Coordinates | null) => void;
   onZoomChange: (zoom: number) => void;
 };
 
 const Canvas = (props: Props) => {
   const ref = useRef<Konva.Stage>(null);
+  const artBoards = useArtBoardStore((state: ArtBoardState) => state.artBoards);
+  const selectedArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.selectedArtBoard
+  );
+  const selectArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.setSelectedArtBoard
+  );
+  const removeArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.removeArtBoard
+  );
 
   const handleStageClick = (e: KonvaEventObject<MouseEvent>) => {
-    console.log("mouse click: ", e.evt.button);
     const emptySpace = e.target === e.target.getStage();
     if (emptySpace) {
-      props.onArtBoardSelect(null);
+      selectArtBoard(null);
     }
   };
 
   const handleStageMouseDown = (e: KonvaEventObject<MouseEvent>) => {
-    console.log("mouse down: ", e.evt.button);
     if (e.evt.button === 0) {
       // left click
       props.onToggleContextMenu(null);
@@ -88,20 +94,17 @@ const Canvas = (props: Props) => {
     props.onZoomChange(scale * 100);
   };
 
-  const handleOnArtBoardSelect = (artboard: IArtBoard) =>
-    props.onArtBoardSelect(artboard);
-
   const handleOnKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
 
     console.log(e);
 
-    if (!props.selectedArtBoard) {
+    if (!selectedArtBoard) {
       return;
     }
 
     if (e.key === "Backspace" || e.key === "Delete") {
-      props.onDeleteArtBoard(props.selectedArtBoard);
+      removeArtBoard(selectedArtBoard);
     }
     // TODO: move artboard with arrow keys
   };
@@ -119,17 +122,8 @@ const Canvas = (props: Props) => {
         scaleX={props.zoom / 100}
         scaleY={props.zoom / 100}
       >
-        {props.artboards.map((artboard: IArtBoard) => (
-          <ArtBoard
-            key={artboard.id}
-            selected={
-              props.selectedArtBoard !== null &&
-              props.selectedArtBoard.id === artboard.id
-            }
-            size={artboard.size}
-            title={artboard.title}
-            onSelect={() => handleOnArtBoardSelect(artboard)}
-          />
+        {artBoards.map((artBoard: ArtBoard) => (
+          <ArtBoardLayer key={artBoard.id} artBoard={artBoard} />
         ))}
       </Stage>
     </div>

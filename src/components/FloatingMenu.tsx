@@ -9,22 +9,23 @@ import {
 } from "@mantine/core";
 import { IconDeviceDesktopPlus } from "@tabler/icons-react";
 import ZoomMenu from "./ZoomMenu";
-import { ArtBoardSize, IArtBoard } from "./objects/ArtBoard";
 import ArtBoardSizeMenu from "./ArtBoardSizeMenu";
 import ArtBoardTitleField from "./ArtBoardTitleField";
+import { ArtBoardState, useArtBoardStore } from "../stores/useArtBoardStore";
 
 type Props = {
-  selectedArtBoard: IArtBoard | null;
   visible: boolean;
   zoom: number;
-  onArtBoardSizeChange: (size: ArtBoardSize) => void;
-  onArtBoardTitleChange: (title: string) => void;
   onNewArtBoard: () => void;
   onToggle: (value: boolean) => void;
   onZoomChange: (value: number) => void;
 };
 
 const FloatingMenu = (props: Props) => {
+  const selectedArtBoard = useArtBoardStore(
+    (state: ArtBoardState) => state.selectedArtBoard
+  );
+
   if (!props.visible) {
     return null;
   }
@@ -44,7 +45,7 @@ const FloatingMenu = (props: Props) => {
         >
           <IconDeviceDesktopPlus />
         </ActionIcon>
-        {props.selectedArtBoard && (
+        {selectedArtBoard && (
           <Flex
             mt={rem(20)}
             gap="sm"
@@ -58,18 +59,8 @@ const FloatingMenu = (props: Props) => {
               labelPosition="center"
               w="100%"
             />
-            <ArtBoardTitleField
-              value={props.selectedArtBoard.title}
-              onChange={(value: string) => {
-                props.onArtBoardTitleChange(value);
-              }}
-            />
-            <ArtBoardSizeMenu
-              value={props.selectedArtBoard.size}
-              onSizeChange={(size: ArtBoardSize) =>
-                props.onArtBoardSizeChange(size)
-              }
-            />
+            <ArtBoardTitleField artBoard={selectedArtBoard} />
+            <ArtBoardSizeMenu artBoard={selectedArtBoard} />
           </Flex>
         )}
         <ZoomMenu
