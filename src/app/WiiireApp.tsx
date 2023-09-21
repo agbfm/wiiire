@@ -1,12 +1,14 @@
 import { MouseEvent, useState } from "react";
-import FloatingMenu from "./../components/FloatingMenu";
+import MenuPanel from "./../components/MenuPanel";
 import Canvas from "./../components/Canvas";
 import { Coordinates } from "./../types/coordinates";
 import ContextMenu from "./../components/ContextMenu";
 import NewArtBoardModal from "./../components/NewArtBoardModal";
+import LibraryPanel from "./../components/LibraryPanel";
 
 const WiiireApp = () => {
   const [showMenu, toggleMenu] = useState(true);
+  const [showLibrary, toggleLibrary] = useState(true);
   const [contextMenuCoords, toggleContextMenu] = useState<Coordinates | null>(
     null
   );
@@ -38,13 +40,14 @@ const WiiireApp = () => {
         }
         onZoomChange={handleZoomChange}
       />
-      <FloatingMenu
+      <MenuPanel
         visible={showMenu}
         zoom={zoom}
         onNewArtBoard={() => toggleNewArtBoardModal(true)}
-        onToggle={(visible: boolean) => toggleMenu(visible)}
+        onToggle={toggleMenu}
         onZoomChange={handleZoomChange}
       />
+      <LibraryPanel visible={showLibrary} onToggle={toggleLibrary} />
       <ContextMenu
         coordinates={contextMenuCoords}
         visible={contextMenuCoords !== null}

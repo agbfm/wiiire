@@ -26,7 +26,7 @@ const Canvas = (props: Props) => {
   const { selectArtBoard, removeArtBoard } = useArtBoardActions();
 
   const handleStageClick = (e: KonvaEventObject<MouseEvent>) => {
-    const emptySpace = e.target === e.target.getStage();
+    const emptySpace = e.target === ref.current;
     if (emptySpace) {
       selectArtBoard(null);
     }
@@ -108,12 +108,12 @@ const Canvas = (props: Props) => {
     <div onKeyDown={handleOnKeyDown} tabIndex={1}>
       <Stage
         draggable
+        ref={ref}
         width={window.innerWidth}
         height={window.innerHeight}
         onClick={handleStageClick}
         onMouseDown={handleStageMouseDown}
         onWheel={handleStageScroll}
-        ref={ref}
         scaleX={props.zoom / 100}
         scaleY={props.zoom / 100}
       >
