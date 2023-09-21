@@ -1,6 +1,6 @@
 import { KonvaEventObject } from "konva/lib/Node";
 import { useRef, useState } from "react";
-import { Group, Layer, Rect, Text } from "react-konva";
+import { Group, Layer, Line, Rect, Text } from "react-konva";
 import Konva from "konva";
 import { ArtBoard, getDimensionsForSize } from "./../../types/artboard";
 import {
@@ -10,6 +10,7 @@ import {
 import { IComponent } from "./../../types/component";
 import { Button } from "./../../types/button";
 import { ButtonLayer } from "./ButtonLayer";
+import { Coordinates } from "../../types/coordinates";
 
 type Props = {
   artBoard: ArtBoard;
@@ -19,16 +20,14 @@ const LABEL_ML = 10;
 const BOARD_ML = 5;
 const BOARD_MT = 20;
 
-const renderButton = (button: Button) => (
-  <ButtonLayer button={button} key={button.id} />
-);
-
 const ArtBoardLayer = ({ artBoard }: Props) => {
   const ref = useRef<Konva.Group>(null);
   const selectedArtBoard = useSelectedArtBoard();
   const { selectArtBoard, updateArtBoard } = useArtBoardActions();
 
   const [coords, setCoords] = useState(artBoard.coordinates);
+  const [showHorizontalGuideline, toggleHorizontalGuideline] = useState(false);
+  const [showVerticalGuideline, toggleVerticalGuideline] = useState(false);
 
   const handleClick = () => handleOnSelect();
   const handleDragStart = () => handleOnSelect();
@@ -46,6 +45,32 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
   const groupDimensions = {
     height: dimensions.height + (BOARD_ML + BOARD_MT),
     width: dimensions.width + BOARD_ML * 2,
+  };
+
+  const handleChildDragMove = (
+    height: number,
+    width: number,
+    coordinates: Coordinates
+  ) => {
+    const coords = { x: coordinates.x - BOARD_ML, y: coordinates.y - BOARD_MT };
+
+    const verticalCenter = (dimensions.width - width) / 2;
+    if (coords.x >= verticalCenter - 1 && coords.x <= verticalCenter + 1) {
+      toggleVerticalGuideline(true);
+    } else if (showVerticalGuideline) {
+      toggleVerticalGuideline(false);
+    }
+
+    const horizontalCenter = (dimensions.height - height) / 2;
+    if (coords.y >= horizontalCenter - 1 && coords.y <= horizontalCenter + 1) {
+      toggleHorizontalGuideline(true);
+    } else if (showHorizontalGuideline) {
+      toggleHorizontalGuideline(false);
+    }
+  };
+  const handleChildDragEnd = () => {
+    toggleHorizontalGuideline(false);
+    toggleVerticalGuideline(false);
   };
 
   return (
@@ -97,10 +122,41 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
             width={dimensions.width}
             fill="#ffffff"
           />
+          {showHorizontalGuideline && (
+            <Line
+              stroke="red"
+              strokeWidth={1}
+              points={[
+                5,
+                dimensions.height / 2 + 20,
+                dimensions.width + 5,
+                dimensions.height / 2 + 20,
+              ]}
+            />
+          )}
+          {showVerticalGuideline && (
+            <Line
+              stroke="red"
+              strokeWidth={1}
+              points={[
+                dimensions.width / 2 + 5,
+                20,
+                dimensions.width / 2 + 5,
+                dimensions.height + 20,
+              ]}
+            />
+          )}
           {artBoard.components?.map((c: IComponent) => {
             switch (c.kind) {
               case "button":
-                return renderButton(c as Button);
+                return (
+                  <ButtonLayer
+                    button={c as Button}
+                    key={c.id}
+                    onDragMove={handleChildDragMove}
+                    onDragEnd={handleChildDragEnd}
+                  />
+                );
             }
           })}
         </Group>

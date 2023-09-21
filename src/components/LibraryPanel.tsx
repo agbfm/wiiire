@@ -7,9 +7,6 @@ import {
   rem,
   Title,
 } from "@mantine/core";
-import { v4 as uuid } from "uuid";
-import { ButtonLayer } from "./objects/ButtonLayer";
-import { Button } from "./../types/button";
 
 type Props = {
   visible: boolean;
@@ -17,15 +14,6 @@ type Props = {
 };
 
 const LibraryPanel = (props: Props) => {
-  const demoButton: Button = {
-    kind: "button",
-    id: uuid(),
-    coordinates: { x: 16, y: 0 },
-    height: 30,
-    label: "Button",
-    width: 120,
-  };
-
   if (!props.visible) {
     return null;
   }
@@ -51,7 +39,6 @@ const LibraryPanel = (props: Props) => {
           wrap="wrap"
         >
           <Divider label="Essentials" labelPosition="center" w="100%" />
-          <ButtonLayer button={demoButton} />
         </Flex>
       </Card>
     </Affix>
