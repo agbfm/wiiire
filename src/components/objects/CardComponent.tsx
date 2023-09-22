@@ -1,7 +1,7 @@
 import { KonvaEventObject } from "konva/lib/Node";
 import { useState } from "react";
 import { Group, Rect } from "react-konva";
-import { Card } from "./../../types/card";
+import { Card } from "../../types/card";
 import { Coordinates } from "../../types/coordinates";
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   onDragEnd: () => void;
 };
 
-const CardLayer = ({ card, onDragMove, onDragEnd }: Props) => {
+const CardComponent = ({ card, onDragMove, onDragEnd }: Props) => {
   const [coords, setCoords] = useState(card.coordinates);
 
   const handleDragMove = (e: KonvaEventObject<DragEvent>) => {
@@ -70,4 +70,4 @@ const CardLayer = ({ card, onDragMove, onDragEnd }: Props) => {
   );
 };
 
-export { CardLayer };
+export { CardComponent };

@@ -7,6 +7,7 @@ import {
 import { Coordinates } from "../types/coordinates";
 import { Button } from "../types/button";
 import { Card } from "../types/card";
+import { Label } from "../types/label";
 
 export const createArtBoard = (
   title: string,
@@ -23,7 +24,7 @@ export const createArtBoard = (
     size: artBoardSize,
     height: dimensions.height,
     width: dimensions.width,
-    components: [demoCard(), demoButton()],
+    components: [demoCard(), demoLabel(), demoButton()],
   };
 };
 
@@ -44,7 +45,7 @@ const demoButton = (): Button => ({
   coordinates: { x: 37, y: 84 },
   height: 32,
   width: 128,
-  label: "Button",
+  text: "Button",
 });
 
 const demoCard = (): Card => ({
@@ -54,4 +55,14 @@ const demoCard = (): Card => ({
   height: 128,
   width: 343,
   radius: "md",
+});
+
+const demoLabel = (): Label => ({
+  kind: "label",
+  id: uuid(),
+  coordinates: { x: 37, y: 52 },
+  height: 20,
+  width: 300,
+  text: "Heading 3",
+  size: "h3",
 });

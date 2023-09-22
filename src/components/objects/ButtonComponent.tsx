@@ -2,7 +2,7 @@ import { KonvaEventObject } from "konva/lib/Node";
 import { useState } from "react";
 import { Group, Rect, Text } from "react-konva";
 import { Button } from "./../../types/button";
-import { Coordinates } from "../../types/coordinates";
+import { Coordinates } from "./../../types/coordinates";
 
 type Props = {
   button: Button;
@@ -14,7 +14,7 @@ type Props = {
   onDragEnd: () => void;
 };
 
-const ButtonLayer = ({ button, onDragMove, onDragEnd }: Props) => {
+const ButtonComponent = ({ button, onDragMove, onDragEnd }: Props) => {
   const [coords, setCoords] = useState(button.coordinates);
 
   const handleDragMove = (e: KonvaEventObject<DragEvent>) => {
@@ -58,7 +58,7 @@ const ButtonLayer = ({ button, onDragMove, onDragEnd }: Props) => {
         cornerRadius={4}
       />
       <Text
-        text={button.label}
+        text={button.text}
         x={16}
         y={10}
         fontSize={14}
@@ -70,4 +70,4 @@ const ButtonLayer = ({ button, onDragMove, onDragEnd }: Props) => {
   );
 };
 
-export { ButtonLayer };
+export { ButtonComponent };

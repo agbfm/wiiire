@@ -9,10 +9,12 @@ import {
 } from "./../../stores/useArtBoardStore";
 import { IComponent } from "./../../types/component";
 import { Button } from "./../../types/button";
-import { ButtonLayer } from "./ButtonLayer";
-import { Coordinates } from "../../types/coordinates";
-import { CardLayer } from "./CardLayer";
-import { Card } from "../../types/card";
+import { ButtonComponent } from "./ButtonComponent";
+import { Coordinates } from "./../../types/coordinates";
+import { CardComponent } from "./CardComponent";
+import { Card } from "./../../types/card";
+import { LabelComponent } from "./LabelComponent";
+import { Label } from "./../../types/label";
 
 type Props = {
   artBoard: ArtBoard;
@@ -165,7 +167,7 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
             switch (c.kind) {
               case "button":
                 return (
-                  <ButtonLayer
+                  <ButtonComponent
                     button={c as Button}
                     key={c.id}
                     onDragMove={handleChildDragMove}
@@ -174,8 +176,17 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
                 );
               case "card":
                 return (
-                  <CardLayer
+                  <CardComponent
                     card={c as Card}
+                    key={c.id}
+                    onDragMove={handleChildDragMove}
+                    onDragEnd={handleChildDragEnd}
+                  />
+                );
+              case "label":
+                return (
+                  <LabelComponent
+                    label={c as Label}
                     key={c.id}
                     onDragMove={handleChildDragMove}
                     onDragEnd={handleChildDragEnd}
