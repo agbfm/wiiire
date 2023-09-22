@@ -32,6 +32,7 @@ const ArtBoardSizeMenu = (props: Props) => {
         { label: "Wide", value: ArtBoardSize.WIDE },
       ]}
       fullWidth
+      size="xs"
       w="100%"
     />
   );
