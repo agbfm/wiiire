@@ -45,6 +45,7 @@ const WiiireApp = () => {
         zoom={zoom}
         onNewArtBoard={() => toggleNewArtBoardModal(true)}
         onToggle={toggleMenu}
+        onToggleLibrary={() => toggleLibrary(!showLibrary)}
         onZoomChange={handleZoomChange}
       />
       <LibraryPanel visible={showLibrary} onToggle={toggleLibrary} />

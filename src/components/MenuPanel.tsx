@@ -6,18 +6,20 @@ import {
   Flex,
   rem,
   Title,
+  Tooltip,
 } from "@mantine/core";
-import { IconDeviceDesktopPlus } from "@tabler/icons-react";
+import { IconApps, IconDeviceDesktopPlus } from "@tabler/icons-react";
 import ZoomMenu from "./ZoomMenu";
 import ArtBoardSizeMenu from "./ArtBoardSizeMenu";
 import ArtBoardTitleField from "./ArtBoardTitleField";
-import { useSelectedArtBoard } from "../stores/useArtBoardStore";
+import { useSelectedArtBoard } from "./../stores/useArtBoardStore";
 
 type Props = {
   visible: boolean;
   zoom: number;
   onNewArtBoard: () => void;
   onToggle: (value: boolean) => void;
+  onToggleLibrary: () => void;
   onZoomChange: (value: number) => void;
 };
 
@@ -34,15 +36,30 @@ const MenuPanel = (props: Props) => {
         <Title align="center" size="h1" mb={rem(16)} w="100%">
           wiiire
         </Title>
-        <ActionIcon
-          color="blue"
-          radius="sm"
-          size="xl"
-          variant="outline"
-          onClick={props.onNewArtBoard}
-        >
-          <IconDeviceDesktopPlus />
-        </ActionIcon>
+        <Flex dir="row" gap="xs" wrap="wrap">
+          <Tooltip label="New Art Board">
+            <ActionIcon
+              color="blue"
+              radius="sm"
+              size="xl"
+              variant="outline"
+              onClick={props.onNewArtBoard}
+            >
+              <IconDeviceDesktopPlus />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Component Library">
+            <ActionIcon
+              color="blue"
+              radius="sm"
+              size="xl"
+              variant="outline"
+              onClick={props.onToggleLibrary}
+            >
+              <IconApps />
+            </ActionIcon>
+          </Tooltip>
+        </Flex>
         {selectedArtBoard && (
           <Flex
             mt={rem(20)}
