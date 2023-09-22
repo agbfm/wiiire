@@ -20,6 +20,7 @@ type Props = {
   onNewArtBoard: () => void;
   onToggle: (value: boolean) => void;
   onToggleLibrary: () => void;
+  onToggleMenu?: () => void;
   onZoomChange: (value: number) => void;
 };
 
@@ -33,10 +34,12 @@ const MenuPanel = (props: Props) => {
   return (
     <Affix position={{ bottom: rem(16), left: rem(16) }}>
       <Card shadow="sm" padding="lg" radius="md" withBorder h="100%" w="300px">
-        <Title align="center" size="h1" mb={rem(16)} w="100%">
-          wiiire
-        </Title>
-        <Flex dir="row" gap="xs" wrap="wrap">
+        <Flex dir="row" align="center" justify="center">
+          <Title align="center" size="h1">
+            wiiire
+          </Title>
+        </Flex>
+        <Flex dir="row" gap="xs" wrap="wrap" mt={rem(16)}>
           <Tooltip label="New Art Board">
             <ActionIcon
               color="blue"

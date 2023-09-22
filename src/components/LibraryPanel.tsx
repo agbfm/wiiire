@@ -33,7 +33,7 @@ const LibraryPanel = (props: Props) => {
             w="240px"
             style={styles}
           >
-            <Flex direction="row" justify="space-between">
+            <Flex direction="row" align="center" justify="space-between">
               <Title size="h2" w="100%">
                 Library
               </Title>

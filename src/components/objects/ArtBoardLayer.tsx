@@ -11,6 +11,8 @@ import { IComponent } from "./../../types/component";
 import { Button } from "./../../types/button";
 import { ButtonLayer } from "./ButtonLayer";
 import { Coordinates } from "../../types/coordinates";
+import { CardLayer } from "./CardLayer";
+import { Card } from "../../types/card";
 
 type Props = {
   artBoard: ArtBoard;
@@ -51,23 +53,36 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
     height: number,
     width: number,
     coordinates: Coordinates
-  ) => {
-    const coords = { x: coordinates.x - BOARD_ML, y: coordinates.y - BOARD_MT };
+  ): Coordinates => {
+    const relativeCoords = {
+      x: coordinates.x - BOARD_ML,
+      y: coordinates.y - BOARD_MT,
+    };
+    const finalCoords = relativeCoords;
 
     const verticalCenter = (dimensions.width - width) / 2;
-    if (coords.x >= verticalCenter - 1 && coords.x <= verticalCenter + 1) {
-      toggleVerticalGuideline(true);
-    } else if (showVerticalGuideline) {
-      toggleVerticalGuideline(false);
+    const toggleVertical =
+      relativeCoords.x >= verticalCenter - 1 &&
+      relativeCoords.x <= verticalCenter + 1;
+
+    toggleVerticalGuideline(toggleVertical);
+    if (toggleVertical) {
+      finalCoords.x = verticalCenter + BOARD_ML;
     }
 
     const horizontalCenter = (dimensions.height - height) / 2;
-    if (coords.y >= horizontalCenter - 1 && coords.y <= horizontalCenter + 1) {
-      toggleHorizontalGuideline(true);
-    } else if (showHorizontalGuideline) {
-      toggleHorizontalGuideline(false);
+    const toggleHorizontal =
+      relativeCoords.y >= horizontalCenter - 1 &&
+      relativeCoords.y <= horizontalCenter + 1;
+
+    toggleHorizontalGuideline(toggleHorizontal);
+    if (toggleHorizontal) {
+      finalCoords.y = horizontalCenter + BOARD_MT;
     }
+
+    return finalCoords;
   };
+
   const handleChildDragEnd = () => {
     toggleHorizontalGuideline(false);
     toggleVerticalGuideline(false);
@@ -88,7 +103,7 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
         x={0}
         y={0}
       >
-        <Text text={artBoard.title} x={LABEL_ML} y={0} />
+        <Text text={artBoard.title} x={LABEL_ML} y={0} onClick={handleClick} />
         <Rect
           x={BOARD_ML}
           y={BOARD_MT}
@@ -152,6 +167,15 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
                 return (
                   <ButtonLayer
                     button={c as Button}
+                    key={c.id}
+                    onDragMove={handleChildDragMove}
+                    onDragEnd={handleChildDragEnd}
+                  />
+                );
+              case "card":
+                return (
+                  <CardLayer
+                    card={c as Card}
                     key={c.id}
                     onDragMove={handleChildDragMove}
                     onDragEnd={handleChildDragEnd}

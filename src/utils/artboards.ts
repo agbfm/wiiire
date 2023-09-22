@@ -6,6 +6,7 @@ import {
 } from "./../types/artboard";
 import { Coordinates } from "../types/coordinates";
 import { Button } from "../types/button";
+import { Card } from "../types/card";
 
 export const createArtBoard = (
   title: string,
@@ -14,7 +15,6 @@ export const createArtBoard = (
 ): ArtBoard => {
   const artBoardSize = size || ArtBoardSize.MOBILE;
   const dimensions = getDimensionsForSize(artBoardSize);
-  const button = demoButton();
   return {
     kind: "artboard",
     id: uuid(),
@@ -23,7 +23,7 @@ export const createArtBoard = (
     size: artBoardSize,
     height: dimensions.height,
     width: dimensions.width,
-    components: [button],
+    components: [demoCard(), demoButton()],
   };
 };
 
@@ -41,8 +41,17 @@ export const duplicateArtBoard = ({
 const demoButton = (): Button => ({
   kind: "button",
   id: uuid(),
-  label: "Button",
-  coordinates: { x: 32, y: 64 },
+  coordinates: { x: 37, y: 84 },
   height: 32,
   width: 128,
+  label: "Button",
+});
+
+const demoCard = (): Card => ({
+  kind: "card",
+  id: uuid(),
+  coordinates: { x: 21, y: 36 },
+  height: 128,
+  width: 343,
+  radius: "md",
 });
