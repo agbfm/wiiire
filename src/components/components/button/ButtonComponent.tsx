@@ -4,13 +4,23 @@ import { TransformerGroup } from "./../TransformerGroup";
 
 type Props = {
   button: Button;
+  draggable?: boolean;
+  selectable?: boolean;
 };
 
 const PADDING_HORIZONTAL = 16;
 const PADDING_VERTICAL = 10;
 
-const ButtonComponent = ({ button }: Props) => (
-  <TransformerGroup component={button}>
+const ButtonComponent = ({
+  button,
+  draggable = true,
+  selectable = true,
+}: Props) => (
+  <TransformerGroup
+    component={button}
+    draggable={draggable}
+    selectable={selectable}
+  >
     <Rect
       x={0}
       y={0}

@@ -8,6 +8,10 @@ import {
 } from "@tabler/icons-react";
 import { ButtonContextMenuConfig } from "@/types/button";
 import { useContextMenuActions } from "@/stores/useContextMenuStore";
+import {
+  useComponentActions,
+  useSelectedComponent,
+} from "@/stores/useComponentStore";
 
 type Props = {
   config: ButtonContextMenuConfig;
@@ -17,7 +21,22 @@ type Props = {
 const ICON_SIZE = 16;
 
 const ButtonContextMenu = ({ config, visible }: Props) => {
+  // components
+  const selectedComponent = useSelectedComponent();
+  const { removeComponent } = useComponentActions();
+
+  // context menu
   const { setContextMenu } = useContextMenuActions();
+
+  const handleCloseMenu = () => setContextMenu(null);
+
+  const handleDelete = () => {
+    if (selectedComponent !== null) {
+      // TODO: remove component from artboard
+      removeComponent(selectedComponent);
+      handleCloseMenu();
+    }
+  };
 
   if (config.coordinates === null) {
     return null;
@@ -26,12 +45,7 @@ const ButtonContextMenu = ({ config, visible }: Props) => {
   const { x, y } = config.coordinates;
   return (
     <Affix position={{ top: rem(y), left: rem(x) }}>
-      <Menu
-        shadow="md"
-        width={200}
-        opened={visible}
-        onClose={() => setContextMenu(null)}
-      >
+      <Menu shadow="md" width={200} opened={visible} onClose={handleCloseMenu}>
         <Menu.Dropdown>
           <Menu.Item icon={<IconArrowNarrowLeft size={ICON_SIZE} />}>
             Send backward
@@ -54,6 +68,7 @@ const ButtonContextMenu = ({ config, visible }: Props) => {
                 Delete
               </Text>
             }
+            onClick={handleDelete}
           >
             <Text size="sm" span>
               Delete

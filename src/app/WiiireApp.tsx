@@ -1,9 +1,9 @@
 import { MouseEvent, useState } from "react";
-import MenuPanel from "./../components/MenuPanel";
+import MenuPanel from "../components/panels/MenuPanel";
 import Canvas from "./../components/Canvas";
 import ContextMenu from "./../components/ContextMenu";
-import NewArtBoardModal from "./../components/NewArtBoardModal";
-import LibraryPanel from "./../components/LibraryPanel";
+import NewArtBoardModal from "../components/modals/NewArtBoardModal";
+import LibraryPanel from "../components/panels/LibraryPanel";
 import { useContextMenu } from "./../stores/useContextMenuStore";
 import { ButtonContextMenu } from "../components/components/button/ButtonContextMenu";
 import { ButtonContextMenuConfig } from "../types/button";

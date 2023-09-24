@@ -3,6 +3,8 @@ import { Button, Flex, Modal, rem, TextInput } from "@mantine/core";
 import { createArtBoard } from "@/utils/artboards";
 import { ArtBoard } from "@/types/artboard";
 import { useArtBoardActions } from "@/stores/useArtBoardStore";
+import { IComponent } from "@/types/component";
+import { useComponentActions } from "@/stores/useComponentStore";
 
 type Props = {
   visible: boolean;
@@ -10,10 +12,16 @@ type Props = {
 };
 
 const NewArtBoardModal = (props: Props) => {
+  // refs
   const ref = useRef<HTMLInputElement>(null);
 
+  // artboards
   const { addArtBoard } = useArtBoardActions();
 
+  // components
+  const { addComponent } = useComponentActions();
+
+  // local state
   const [title, setTitle] = useState<string>("");
 
   const handleOnLoad = () => {
@@ -39,6 +47,7 @@ const NewArtBoardModal = (props: Props) => {
   const handleOnCreateClick = () => {
     const artBoard: ArtBoard = createArtBoard(title);
     addArtBoard(artBoard);
+    artBoard.components.forEach((c: IComponent) => addComponent(c));
     handleOnCloseClick();
   };
 

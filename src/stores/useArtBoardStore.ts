@@ -77,6 +77,12 @@ const useArtBoardStore = create<ArtBoardState>()(
   )
 );
 
+export const useArtBoard = (id: string): ArtBoard | null =>
+  useArtBoardStore(
+    (state: ArtBoardState) =>
+      state.artBoards.find((a: ArtBoard) => a.id === id) || null
+  );
+
 export const useArtBoards = (): ArtBoard[] =>
   useArtBoardStore((state: ArtBoardState) => state.artBoards);
 

@@ -30,11 +30,11 @@ const Canvas = (props: Props) => {
   // artboards
   const artBoards = useArtBoards();
   const selectedArtBoard = useSelectedArtBoard();
-  const { selectArtBoard, removeArtBoard } = useArtBoardActions();
+  const { removeArtBoard, selectArtBoard } = useArtBoardActions();
 
   // components
   const selectedComponent = useSelectedComponent();
-  const { selectComponent } = useComponentActions();
+  const { removeComponent, selectComponent } = useComponentActions();
 
   // context menu
   const { setContextMenu } = useContextMenuActions();
@@ -117,12 +117,12 @@ const Canvas = (props: Props) => {
   const handleOnKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
 
-    if (!selectedArtBoard) {
-      return;
-    }
-
     if (e.key === "Backspace" || e.key === "Delete") {
-      removeArtBoard(selectedArtBoard);
+      if (selectedArtBoard !== null) {
+        removeArtBoard(selectedArtBoard);
+      } else if (selectedComponent !== null) {
+        removeComponent(selectedComponent);
+      }
     }
     // TODO: move artboard with arrow keys
   };

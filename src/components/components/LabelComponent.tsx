@@ -2,11 +2,17 @@ import { Text } from "react-konva";
 import { Label } from "@/types/label";
 import { TransformerGroup } from "./TransformerGroup";
 
-type Props = {
+interface Props {
   label: Label;
-};
+  draggable?: boolean;
+  selectable?: boolean;
+}
 
-const LabelComponent = ({ label }: Props) => {
+const LabelComponent = ({
+  label,
+  draggable = true,
+  selectable = true,
+}: Props) => {
   const fontSize =
     label.size === "h1"
       ? 30
@@ -23,12 +29,15 @@ const LabelComponent = ({ label }: Props) => {
       : 12;
 
   return (
-    <TransformerGroup component={label}>
+    <TransformerGroup
+      component={label}
+      draggable={draggable}
+      selectable={selectable}
+    >
       <Text
         x={0}
         y={0}
         height={label.dimensions.height}
-        width={label.dimensions.width}
         fill="#495057"
         fontSize={fontSize}
         text={label.text}

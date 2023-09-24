@@ -19,9 +19,16 @@ import {
 interface Props {
   children: ReactNode;
   component: IComponent;
+  draggable?: boolean;
+  selectable?: boolean;
 }
 
-const TransformerGroup = ({ children, component }: Props) => {
+const TransformerGroup = ({
+  children,
+  component,
+  draggable,
+  selectable,
+}: Props) => {
   // refs
   const ref = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
@@ -40,6 +47,11 @@ const TransformerGroup = ({ children, component }: Props) => {
   const [coords, setCoords] = useState(component.coordinates);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
+    if (!selectable) {
+      e.evt.preventDefault();
+      return;
+    }
+
     e.cancelBubble = true;
 
     if (ref?.current && transformerRef?.current) {
@@ -71,6 +83,11 @@ const TransformerGroup = ({ children, component }: Props) => {
   };
 
   const handleDragMove = (e: KonvaEventObject<DragEvent>) => {
+    if (!draggable) {
+      e.evt.preventDefault();
+      return;
+    }
+
     e.cancelBubble = true;
     // const desiredCoords = { x: e.target.x(), y: e.target.y() };
     // const finalCoords = onDragMove(
@@ -88,6 +105,11 @@ const TransformerGroup = ({ children, component }: Props) => {
   };
 
   const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
+    if (!draggable) {
+      e.evt.preventDefault();
+      return;
+    }
+
     e.cancelBubble = true;
 
     const coordinates = { x: e.target.x(), y: e.target.y() };
@@ -116,7 +138,7 @@ const TransformerGroup = ({ children, component }: Props) => {
     <>
       <Group
         ref={ref}
-        draggable
+        draggable={draggable}
         onDragEnd={handleDragEnd}
         onDragMove={handleDragMove}
         onMouseDown={handleMouseDown}

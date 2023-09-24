@@ -11,6 +11,7 @@ import { IComponent } from "@/types/component";
 import { ComponentProvider } from "./ComponentProvider";
 import {
   useComponentActions,
+  useComponents,
   useSelectedComponent,
 } from "@/stores/useComponentStore";
 
@@ -31,6 +32,7 @@ const ArtBoardComponent = ({ artBoard }: Props) => {
   const { selectArtBoard, updateArtBoard } = useArtBoardActions();
 
   // components
+  const allComponents = useComponents();
   const selectedComponent = useSelectedComponent();
   const { selectComponent } = useComponentActions();
 
@@ -101,6 +103,10 @@ const ArtBoardComponent = ({ artBoard }: Props) => {
   //   toggleHorizontalGuideline(false);
   //   toggleVerticalGuideline(false);
   // };
+
+  const components = artBoard.components.filter(({ id }: IComponent) =>
+    allComponents.some((c: IComponent) => c.id === id)
+  );
 
   return (
     <Layer
@@ -176,7 +182,7 @@ const ArtBoardComponent = ({ artBoard }: Props) => {
               ]}
             />
           )}
-          {artBoard.components?.map((c: IComponent) => (
+          {components?.map((c: IComponent) => (
             <ComponentProvider component={c} key={c.id} />
           ))}
         </Group>

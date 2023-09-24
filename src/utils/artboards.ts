@@ -37,10 +37,10 @@ export const duplicateArtBoard = ({
   });
 };
 
-const demoButton = (): Button => ({
+export const demoButton = (coordinates?: Coordinates): Button => ({
   kind: "button",
   id: uuid(),
-  coordinates: { x: 37, y: 84 },
+  coordinates: coordinates || { x: 37, y: 84 },
   text: "Button",
   dimensions: {
     height: 32,
@@ -48,10 +48,10 @@ const demoButton = (): Button => ({
   },
 });
 
-const demoCard = (): Card => ({
+export const demoCard = (coordinates?: Coordinates): Card => ({
   kind: "card",
   id: uuid(),
-  coordinates: { x: 21, y: 36 },
+  coordinates: coordinates || { x: 21, y: 36 },
   radius: "md",
   dimensions: {
     height: 128,
@@ -59,11 +59,11 @@ const demoCard = (): Card => ({
   },
 });
 
-const demoLabel = (): Label => ({
+export const demoLabel = (coordinates?: Coordinates): Label => ({
   kind: "label",
   id: uuid(),
-  coordinates: { x: 37, y: 52 },
-  text: "Heading 3",
+  coordinates: coordinates || { x: 37, y: 52 },
+  text: "Label",
   size: "h3",
   dimensions: {
     height: 20,
