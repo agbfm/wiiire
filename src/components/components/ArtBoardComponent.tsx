@@ -2,36 +2,43 @@ import { KonvaEventObject } from "konva/lib/Node";
 import { useRef, useState } from "react";
 import { Group, Layer, Line, Rect, Text } from "react-konva";
 import Konva from "konva";
-import { ArtBoard, getDimensionsForSize } from "./../../types/artboard";
+import { ArtBoard, getDimensionsForSize } from "@/types/artboard";
 import {
   useArtBoardActions,
   useSelectedArtBoard,
-} from "./../../stores/useArtBoardStore";
-import { IComponent } from "./../../types/component";
-import { Button } from "./../../types/button";
-import { ButtonComponent } from "./ButtonComponent";
-import { Coordinates } from "./../../types/coordinates";
-import { CardComponent } from "./CardComponent";
-import { Card } from "./../../types/card";
-import { LabelComponent } from "./LabelComponent";
-import { Label } from "./../../types/label";
+} from "@/stores/useArtBoardStore";
+import { IComponent } from "@/types/component";
+import { ComponentProvider } from "./ComponentProvider";
+import {
+  useComponentActions,
+  useSelectedComponent,
+} from "@/stores/useComponentStore";
 
-type Props = {
+interface Props {
   artBoard: ArtBoard;
-};
+}
 
 const LABEL_ML = 10;
 const BOARD_ML = 5;
 const BOARD_MT = 20;
 
-const ArtBoardLayer = ({ artBoard }: Props) => {
+const ArtBoardComponent = ({ artBoard }: Props) => {
+  // refs
   const ref = useRef<Konva.Group>(null);
+
+  // artboards
   const selectedArtBoard = useSelectedArtBoard();
   const { selectArtBoard, updateArtBoard } = useArtBoardActions();
 
+  // components
+  const selectedComponent = useSelectedComponent();
+  const { selectComponent } = useComponentActions();
+
   const [coords, setCoords] = useState(artBoard.coordinates);
-  const [showHorizontalGuideline, toggleHorizontalGuideline] = useState(false);
-  const [showVerticalGuideline, toggleVerticalGuideline] = useState(false);
+  // const [showHorizontalGuideline, toggleHorizontalGuideline] = useState(false);
+  // const [showVerticalGuideline, toggleVerticalGuideline] = useState(false);
+  const showHorizontalGuideline = false;
+  const showVerticalGuideline = false;
 
   const handleClick = () => handleOnSelect();
   const handleDragStart = () => handleOnSelect();
@@ -43,7 +50,12 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
     updateArtBoard(updated);
   };
 
-  const handleOnSelect = () => selectArtBoard(artBoard);
+  const handleOnSelect = () => {
+    if (selectedComponent !== null) {
+      selectComponent(null);
+    }
+    selectArtBoard(artBoard);
+  };
 
   const dimensions = getDimensionsForSize(artBoard.size);
   const groupDimensions = {
@@ -51,44 +63,44 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
     width: dimensions.width + BOARD_ML * 2,
   };
 
-  const handleChildDragMove = (
-    height: number,
-    width: number,
-    coordinates: Coordinates
-  ): Coordinates => {
-    const relativeCoords = {
-      x: coordinates.x - BOARD_ML,
-      y: coordinates.y - BOARD_MT,
-    };
-    const finalCoords = relativeCoords;
+  // const handleChildDragMove = (
+  //   height: number,
+  //   width: number,
+  //   coordinates: Coordinates
+  // ): Coordinates => {
+  //   const relativeCoords = {
+  //     x: coordinates.x - BOARD_ML,
+  //     y: coordinates.y - BOARD_MT,
+  //   };
+  //   const finalCoords = relativeCoords;
 
-    const verticalCenter = (dimensions.width - width) / 2;
-    const toggleVertical =
-      relativeCoords.x >= verticalCenter - 1 &&
-      relativeCoords.x <= verticalCenter + 1;
+  //   const verticalCenter = (dimensions.width - width) / 2;
+  //   const toggleVertical =
+  //     relativeCoords.x >= verticalCenter - 1 &&
+  //     relativeCoords.x <= verticalCenter + 1;
 
-    toggleVerticalGuideline(toggleVertical);
-    if (toggleVertical) {
-      finalCoords.x = verticalCenter + BOARD_ML;
-    }
+  //   toggleVerticalGuideline(toggleVertical);
+  //   if (toggleVertical) {
+  //     finalCoords.x = verticalCenter + BOARD_ML;
+  //   }
 
-    const horizontalCenter = (dimensions.height - height) / 2;
-    const toggleHorizontal =
-      relativeCoords.y >= horizontalCenter - 1 &&
-      relativeCoords.y <= horizontalCenter + 1;
+  //   const horizontalCenter = (dimensions.height - height) / 2;
+  //   const toggleHorizontal =
+  //     relativeCoords.y >= horizontalCenter - 1 &&
+  //     relativeCoords.y <= horizontalCenter + 1;
 
-    toggleHorizontalGuideline(toggleHorizontal);
-    if (toggleHorizontal) {
-      finalCoords.y = horizontalCenter + BOARD_MT;
-    }
+  //   toggleHorizontalGuideline(toggleHorizontal);
+  //   if (toggleHorizontal) {
+  //     finalCoords.y = horizontalCenter + BOARD_MT;
+  //   }
 
-    return finalCoords;
-  };
+  //   return finalCoords;
+  // };
 
-  const handleChildDragEnd = () => {
-    toggleHorizontalGuideline(false);
-    toggleVerticalGuideline(false);
-  };
+  // const handleChildDragEnd = () => {
+  //   toggleHorizontalGuideline(false);
+  //   toggleVerticalGuideline(false);
+  // };
 
   return (
     <Layer
@@ -138,6 +150,7 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
             height={dimensions.height}
             width={dimensions.width}
             fill="#ffffff"
+            onClick={handleClick}
           />
           {showHorizontalGuideline && (
             <Line
@@ -163,41 +176,13 @@ const ArtBoardLayer = ({ artBoard }: Props) => {
               ]}
             />
           )}
-          {artBoard.components?.map((c: IComponent) => {
-            switch (c.kind) {
-              case "button":
-                return (
-                  <ButtonComponent
-                    button={c as Button}
-                    key={c.id}
-                    onDragMove={handleChildDragMove}
-                    onDragEnd={handleChildDragEnd}
-                  />
-                );
-              case "card":
-                return (
-                  <CardComponent
-                    card={c as Card}
-                    key={c.id}
-                    onDragMove={handleChildDragMove}
-                    onDragEnd={handleChildDragEnd}
-                  />
-                );
-              case "label":
-                return (
-                  <LabelComponent
-                    label={c as Label}
-                    key={c.id}
-                    onDragMove={handleChildDragMove}
-                    onDragEnd={handleChildDragEnd}
-                  />
-                );
-            }
-          })}
+          {artBoard.components?.map((c: IComponent) => (
+            <ComponentProvider component={c} key={c.id} />
+          ))}
         </Group>
       </Group>
     </Layer>
   );
 };
 
-export { ArtBoardLayer };
+export { ArtBoardComponent };

@@ -2,40 +2,59 @@ import { KeyboardEvent, useRef } from "react";
 import { Stage } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import Konva from "konva";
-import { ArtBoardLayer } from "./objects/ArtBoardLayer";
-import { ArtBoard } from "./../types/artboard";
-import { Coordinates } from "./../types/coordinates";
+import { ArtBoardComponent } from "./components/ArtBoardComponent";
+import { ArtBoard } from "@/types/artboard";
 import {
   useArtBoardActions,
   useArtBoards,
   useSelectedArtBoard,
-} from "./../stores/useArtBoardStore";
+} from "@/stores/useArtBoardStore";
+import { useContextMenuActions } from "@/stores/useContextMenuStore";
+import { Coordinates } from "@/types/component";
+import {
+  useComponentActions,
+  useSelectedComponent,
+} from "@/stores/useComponentStore";
 
 const SCALE_AMOUNT = 1.05;
 
 type Props = {
   zoom: number;
-  onToggleContextMenu: (coordinates: Coordinates | null) => void;
   onZoomChange: (zoom: number) => void;
 };
 
 const Canvas = (props: Props) => {
+  // refs
   const ref = useRef<Konva.Stage>(null);
+
+  // artboards
   const artBoards = useArtBoards();
   const selectedArtBoard = useSelectedArtBoard();
   const { selectArtBoard, removeArtBoard } = useArtBoardActions();
 
+  // components
+  const selectedComponent = useSelectedComponent();
+  const { selectComponent } = useComponentActions();
+
+  // context menu
+  const { setContextMenu } = useContextMenuActions();
+
   const handleStageClick = (e: KonvaEventObject<MouseEvent>) => {
     const emptySpace = e.target === ref.current;
     if (emptySpace) {
-      selectArtBoard(null);
+      if (selectedArtBoard !== null) {
+        selectArtBoard(null);
+      }
+      if (selectedComponent !== null) {
+        selectComponent(null);
+      }
     }
   };
 
   const handleStageMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     if (e.evt.button === 0) {
       // left click
-      props.onToggleContextMenu(null);
+      setContextMenu(null);
     } else if (e.evt.button === 1) {
       // middle mouse button
     } else if (e.evt.button === 2) {
@@ -44,16 +63,20 @@ const Canvas = (props: Props) => {
       if (!stage) {
         return;
       }
+
       const pointer = stage.getRelativePointerPosition();
       if (pointer === null) {
         return;
       }
 
-      props.onToggleContextMenu({ x: pointer.x, y: pointer.y });
+      showContextMenu({ x: pointer.x, y: pointer.y });
     } else {
       e.target.preventDefault();
     }
   };
+
+  const showContextMenu = (coordinates: Coordinates) =>
+    setContextMenu({ kind: "canvas", coordinates });
 
   const handleStageScroll = (e: KonvaEventObject<WheelEvent>) => {
     const stage = ref.current;
@@ -118,7 +141,7 @@ const Canvas = (props: Props) => {
         scaleY={props.zoom / 100}
       >
         {artBoards.map((artBoard: ArtBoard) => (
-          <ArtBoardLayer key={artBoard.id} artBoard={artBoard} />
+          <ArtBoardComponent key={artBoard.id} artBoard={artBoard} />
         ))}
       </Stage>
     </div>

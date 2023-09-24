@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { Button, Flex, Modal, rem, TextInput } from "@mantine/core";
-import { createArtBoard } from "../utils/artboards";
-import { ArtBoard } from "../types/artboard";
-import { useArtBoardActions } from "../stores/useArtBoardStore";
+import { createArtBoard } from "@/utils/artboards";
+import { ArtBoard } from "@/types/artboard";
+import { useArtBoardActions } from "@/stores/useArtBoardStore";
 
 type Props = {
   visible: boolean;

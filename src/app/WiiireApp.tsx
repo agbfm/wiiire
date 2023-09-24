@@ -1,17 +1,18 @@
 import { MouseEvent, useState } from "react";
 import MenuPanel from "./../components/MenuPanel";
 import Canvas from "./../components/Canvas";
-import { Coordinates } from "./../types/coordinates";
 import ContextMenu from "./../components/ContextMenu";
 import NewArtBoardModal from "./../components/NewArtBoardModal";
 import LibraryPanel from "./../components/LibraryPanel";
+import { useContextMenu } from "./../stores/useContextMenuStore";
+import { ButtonContextMenu } from "../components/components/button/ButtonContextMenu";
+import { ButtonContextMenuConfig } from "../types/button";
 
 const WiiireApp = () => {
+  const contextMenu = useContextMenu();
+
   const [showMenu, toggleMenu] = useState(true);
   const [showLibrary, toggleLibrary] = useState(true);
-  const [contextMenuCoords, toggleContextMenu] = useState<Coordinates | null>(
-    null
-  );
   const [zoom, setZoom] = useState(100);
   const [showNewArtBoardModal, toggleNewArtBoardModal] = useState(false);
 
@@ -24,6 +25,29 @@ const WiiireApp = () => {
     e.preventDefault();
   };
 
+  let contextMenuComponent = null;
+  if (contextMenu !== null) {
+    switch (contextMenu.kind) {
+      case "canvas":
+        contextMenuComponent = (
+          <ContextMenu
+            config={contextMenu}
+            visible={contextMenu?.coordinates !== null}
+            onNewArtBoard={() => toggleNewArtBoardModal(true)}
+          />
+        );
+        break;
+      case "button":
+        contextMenuComponent = (
+          <ButtonContextMenu
+            config={contextMenu as ButtonContextMenuConfig}
+            visible={contextMenu?.coordinates !== null}
+          />
+        );
+        break;
+    }
+  }
+
   return (
     <div
       onContextMenu={handleContextMenu}
@@ -33,13 +57,7 @@ const WiiireApp = () => {
         width: "100vw",
       }}
     >
-      <Canvas
-        zoom={zoom}
-        onToggleContextMenu={(coordinates: Coordinates | null) =>
-          toggleContextMenu(coordinates)
-        }
-        onZoomChange={handleZoomChange}
-      />
+      <Canvas zoom={zoom} onZoomChange={handleZoomChange} />
       <MenuPanel
         visible={showMenu}
         zoom={zoom}
@@ -49,12 +67,7 @@ const WiiireApp = () => {
         onZoomChange={handleZoomChange}
       />
       <LibraryPanel visible={showLibrary} onToggle={toggleLibrary} />
-      <ContextMenu
-        coordinates={contextMenuCoords}
-        visible={contextMenuCoords !== null}
-        onNewArtBoard={() => toggleNewArtBoardModal(true)}
-        onToggle={(visible: boolean) => !visible && toggleContextMenu(null)}
-      />
+      {contextMenu && contextMenuComponent}
       <NewArtBoardModal
         visible={showNewArtBoardModal}
         onClose={handleCloseModal}

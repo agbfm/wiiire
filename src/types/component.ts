@@ -1,9 +1,9 @@
-import { Coordinates } from "./coordinates";
-
 export interface IComponent {
   kind: string;
   id: string;
   coordinates: Coordinates;
-  height: number;
-  width: number;
+  dimensions: Dimensions;
 }
+
+export type Coordinates = { x: number; y: number };
+export type Dimensions = { height: number; width: number };

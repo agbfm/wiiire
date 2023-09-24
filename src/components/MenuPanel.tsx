@@ -12,7 +12,7 @@ import { IconApps, IconDeviceDesktopPlus } from "@tabler/icons-react";
 import ZoomMenu from "./ZoomMenu";
 import ArtBoardSizeMenu from "./ArtBoardSizeMenu";
 import ArtBoardTitleField from "./ArtBoardTitleField";
-import { useSelectedArtBoard } from "./../stores/useArtBoardStore";
+import { useSelectedArtBoard } from "@/stores/useArtBoardStore";
 
 type Props = {
   visible: boolean;

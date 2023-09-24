@@ -5,20 +5,22 @@ import {
   IconNewSection,
   IconTrash,
 } from "@tabler/icons-react";
-import { Coordinates } from "./../types/coordinates";
 import {
   useArtBoardActions,
   useSelectedArtBoard,
-} from "./../stores/useArtBoardStore";
+} from "@/stores/useArtBoardStore";
+import { ContextMenuConfig } from "@/types/context-menu";
+import { useContextMenuActions } from "@/stores/useContextMenuStore";
 
 type Props = {
-  coordinates: Coordinates | null;
+  config: ContextMenuConfig;
   visible: boolean;
   onNewArtBoard: () => void;
-  onToggle: (visible: boolean) => void;
 };
 
-const ContextMenu = (props: Props) => {
+const ContextMenu = ({ config, visible, onNewArtBoard }: Props) => {
+  const { setContextMenu } = useContextMenuActions();
+
   const selectedArtBoard = useSelectedArtBoard();
   const { duplicateArtBoard, removeArtBoard, removeAllArtBoards } =
     useArtBoardActions();
@@ -41,23 +43,23 @@ const ContextMenu = (props: Props) => {
 
   const handleOnResetCanvas = () => removeAllArtBoards();
 
-  if (props.coordinates === null) {
+  if (config.coordinates === null) {
     return null;
   }
 
-  const { x, y } = props.coordinates;
+  const { x, y } = config.coordinates;
   return (
     <Affix position={{ top: rem(y), left: rem(x) }}>
       <Menu
         shadow="md"
         width={200}
-        opened={props.visible}
-        onChange={props.onToggle}
+        opened={visible}
+        onClose={() => setContextMenu(null)}
       >
         <Menu.Dropdown>
           <Menu.Item
             icon={<IconNewSection size={20} />}
-            onClick={props.onNewArtBoard}
+            onClick={onNewArtBoard}
           >
             New Art Board
           </Menu.Item>

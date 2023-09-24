@@ -1,13 +1,9 @@
 import { v4 as uuid } from "uuid";
-import {
-  ArtBoard,
-  ArtBoardSize,
-  getDimensionsForSize,
-} from "./../types/artboard";
-import { Coordinates } from "../types/coordinates";
-import { Button } from "../types/button";
-import { Card } from "../types/card";
-import { Label } from "../types/label";
+import { ArtBoard, ArtBoardSize, getDimensionsForSize } from "@/types/artboard";
+import { Coordinates } from "@/types/component";
+import { Button } from "@/types/button";
+import { Card } from "@/types/card";
+import { Label } from "@/types/label";
 
 export const createArtBoard = (
   title: string,
@@ -22,8 +18,10 @@ export const createArtBoard = (
     title,
     coordinates: coordinates || { x: 50, y: 50 },
     size: artBoardSize,
-    height: dimensions.height,
-    width: dimensions.width,
+    dimensions: {
+      height: dimensions.height,
+      width: dimensions.width,
+    },
     components: [demoCard(), demoLabel(), demoButton()],
   };
 };
@@ -43,26 +41,32 @@ const demoButton = (): Button => ({
   kind: "button",
   id: uuid(),
   coordinates: { x: 37, y: 84 },
-  height: 32,
-  width: 128,
   text: "Button",
+  dimensions: {
+    height: 32,
+    width: 128,
+  },
 });
 
 const demoCard = (): Card => ({
   kind: "card",
   id: uuid(),
   coordinates: { x: 21, y: 36 },
-  height: 128,
-  width: 343,
   radius: "md",
+  dimensions: {
+    height: 128,
+    width: 343,
+  },
 });
 
 const demoLabel = (): Label => ({
   kind: "label",
   id: uuid(),
   coordinates: { x: 37, y: 52 },
-  height: 20,
-  width: 300,
   text: "Heading 3",
   size: "h3",
+  dimensions: {
+    height: 20,
+    width: 300,
+  },
 });

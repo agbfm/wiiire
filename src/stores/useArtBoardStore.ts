@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { ArtBoard } from "./../types/artboard";
-import { duplicateArtBoard } from "../utils/artboards";
+import { ArtBoard } from "@/types/artboard";
+import { duplicateArtBoard } from "@/utils/artboards";
 
 export interface ArtBoardState {
   artBoards: ArtBoard[];
