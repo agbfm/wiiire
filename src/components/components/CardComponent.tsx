@@ -4,9 +4,15 @@ import { TransformerGroup } from "./TransformerGroup";
 
 type Props = {
   card: Card;
+  draggable?: boolean;
+  selectable?: boolean;
 };
 
-const CardComponent = ({ card }: Props) => {
+const CardComponent = ({
+  card,
+  draggable = true,
+  selectable = true,
+}: Props) => {
   const cornerRadius =
     card.radius === "lg"
       ? 16
@@ -17,7 +23,11 @@ const CardComponent = ({ card }: Props) => {
       : 4;
 
   return (
-    <TransformerGroup component={card}>
+    <TransformerGroup
+      component={card}
+      draggable={draggable}
+      selectable={selectable}
+    >
       <Rect
         x={0}
         y={0}

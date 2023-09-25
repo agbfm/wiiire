@@ -1,6 +1,7 @@
 import { Text } from "react-konva";
 import { Label } from "@/types/label";
 import { TransformerGroup } from "./TransformerGroup";
+import { fonts } from "@/config/constants";
 
 interface Props {
   label: Label;
@@ -39,6 +40,7 @@ const LabelComponent = ({
         y={0}
         height={label.dimensions.height}
         fill="#495057"
+        fontFamily={fonts.canvas.family}
         fontSize={fontSize}
         text={label.text}
       />

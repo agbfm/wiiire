@@ -1,9 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { ArtBoard, ArtBoardSize, getDimensionsForSize } from "@/types/artboard";
 import { Coordinates } from "@/types/component";
-import { Button } from "@/types/button";
-import { Card } from "@/types/card";
-import { Label } from "@/types/label";
+import { demoButton, demoCard, demoLabel } from "./faker";
 
 export const createArtBoard = (
   title: string,
@@ -22,7 +20,7 @@ export const createArtBoard = (
       height: dimensions.height,
       width: dimensions.width,
     },
-    components: [demoCard(), demoLabel(), demoButton()],
+    components: [demoCard(), demoLabel("Label"), demoButton()],
   };
 };
 
@@ -36,37 +34,3 @@ export const duplicateArtBoard = ({
     y: coordinates.y !== null ? coordinates.y + 50 : 0,
   });
 };
-
-export const demoButton = (coordinates?: Coordinates): Button => ({
-  kind: "button",
-  id: uuid(),
-  coordinates: coordinates || { x: 37, y: 84 },
-  text: "Button",
-  dimensions: {
-    height: 32,
-    width: 128,
-  },
-});
-
-export const demoCard = (coordinates?: Coordinates): Card => ({
-  kind: "card",
-  id: uuid(),
-  coordinates: coordinates || { x: 21, y: 36 },
-  radius: "md",
-  dimensions: {
-    height: 128,
-    width: 343,
-  },
-});
-
-export const demoLabel = (coordinates?: Coordinates): Label => ({
-  kind: "label",
-  id: uuid(),
-  coordinates: coordinates || { x: 37, y: 52 },
-  text: "Label",
-  size: "h3",
-  dimensions: {
-    height: 20,
-    width: 300,
-  },
-});

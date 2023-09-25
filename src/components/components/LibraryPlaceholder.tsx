@@ -10,6 +10,8 @@ interface Props {
   onClick: () => void;
 }
 
+const BORDER_WIDTH = 4;
+
 const LibraryPlaceholder = ({
   children,
   coordinates,
@@ -37,14 +39,18 @@ const LibraryPlaceholder = ({
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      clipX={0}
+      clipY={0}
+      clipHeight={dimensions.height + BORDER_WIDTH}
+      clipWidth={dimensions.width + BORDER_WIDTH}
     >
       <Rect
         stroke="#e9ecef"
-        strokeWidth={4}
+        strokeWidth={BORDER_WIDTH}
         height={dimensions.height}
         width={dimensions.width}
-        x={4}
-        y={4}
+        x={BORDER_WIDTH}
+        y={BORDER_WIDTH}
       />
       {children}
     </Group>

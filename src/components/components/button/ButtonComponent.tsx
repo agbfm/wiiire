@@ -1,6 +1,7 @@
 import { Rect, Text } from "react-konva";
 import { Button } from "@/types/button";
 import { TransformerGroup } from "./../TransformerGroup";
+import { fonts } from "@/config/constants";
 
 type Props = {
   button: Button;
@@ -33,7 +34,8 @@ const ButtonComponent = ({
       text={button.text}
       x={PADDING_HORIZONTAL}
       y={PADDING_VERTICAL}
-      fontSize={14}
+      fontFamily={fonts.canvas.family}
+      fontSize={fonts.canvas.size}
       align="center"
       width={button.dimensions.width - PADDING_HORIZONTAL * 2}
       fill="#212529"

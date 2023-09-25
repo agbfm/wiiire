@@ -10,10 +10,12 @@ import {
 } from "@mantine/core";
 import { Layer, Stage } from "react-konva";
 import { ButtonComponent } from "../components/button/ButtonComponent";
-import { demoButton, demoLabel } from "@/utils/artboards";
+import { demoButton, demoCard, demoImage, demoLabel } from "@/utils/faker";
 import { useMemo } from "react";
 import { LabelComponent } from "../components/LabelComponent";
 import { LibraryPlaceholder } from "../components/LibraryPlaceholder";
+import { CardComponent } from "../components/CardComponent";
+import { ImageComponent } from "../components/ImageComponent";
 
 type Props = {
   visible: boolean;
@@ -21,8 +23,23 @@ type Props = {
 };
 
 const LibraryPanel = (props: Props) => {
-  const libraryDemoLabel = useMemo(() => demoLabel({ x: 70, y: 55 }), []);
+  const libraryDemoLabel = useMemo(
+    () => demoLabel("Label", { x: 70, y: 55 }),
+    []
+  );
   const libraryDemoButton = useMemo(() => demoButton({ x: 30, y: 48 }), []);
+  const libraryDemoCard = useMemo(
+    () => demoCard({ x: 24, y: 24 }, { height: 80, width: 140 }),
+    []
+  );
+  const libraryDemoCardLabel = useMemo(
+    () => demoLabel("Card", { x: 34, y: 34 }),
+    []
+  );
+  const libraryDemoImage = useMemo(
+    () => demoImage({ x: 54, y: 24 }, { height: 80, width: 80 }),
+    []
+  );
 
   return (
     <Affix position={{ top: rem(16), bottom: rem(16), right: rem(16) }}>
@@ -85,6 +102,33 @@ const LibraryPanel = (props: Props) => {
                   >
                     <ButtonComponent
                       button={libraryDemoButton}
+                      draggable={false}
+                      selectable={false}
+                    />
+                  </LibraryPlaceholder>
+                  <LibraryPlaceholder
+                    coordinates={{ x: 4, y: 144 }}
+                    dimensions={{ height: 120, width: 180 }}
+                    onClick={() => console.log("card placeholder clicked")}
+                  >
+                    <CardComponent
+                      card={libraryDemoCard}
+                      draggable={false}
+                      selectable={false}
+                    />
+                    <LabelComponent
+                      label={libraryDemoCardLabel}
+                      draggable={false}
+                      selectable={false}
+                    />
+                  </LibraryPlaceholder>
+                  <LibraryPlaceholder
+                    coordinates={{ x: 214, y: 144 }}
+                    dimensions={{ height: 120, width: 180 }}
+                    onClick={() => console.log("image placeholder clicked")}
+                  >
+                    <ImageComponent
+                      image={libraryDemoImage}
                       draggable={false}
                       selectable={false}
                     />
