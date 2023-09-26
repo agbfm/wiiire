@@ -30,7 +30,8 @@ const Canvas = (props: Props) => {
   // artboards
   const artBoards = useArtBoards();
   const selectedArtBoard = useSelectedArtBoard();
-  const { removeArtBoard, selectArtBoard } = useArtBoardActions();
+  const { removeArtBoard, selectArtBoard, updateArtBoard } =
+    useArtBoardActions();
 
   // components
   const selectedComponent = useSelectedComponent();
@@ -75,9 +76,6 @@ const Canvas = (props: Props) => {
     }
   };
 
-  const showContextMenu = (coordinates: Coordinates) =>
-    setContextMenu({ kind: "canvas", coordinates });
-
   const handleStageScroll = (e: KonvaEventObject<WheelEvent>) => {
     const stage = ref.current;
     if (!stage) {
@@ -117,15 +115,43 @@ const Canvas = (props: Props) => {
   const handleOnKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
 
-    if (e.key === "Backspace" || e.key === "Delete") {
+    if (["Backspace", "Delete"].includes(e.key)) {
       if (selectedArtBoard !== null) {
         removeArtBoard(selectedArtBoard);
       } else if (selectedComponent !== null) {
         removeComponent(selectedComponent);
       }
+    } else if (["ArrowUp", "ArrowDown"].includes(e.key)) {
+      if (selectedArtBoard !== null) {
+        selectedArtBoard.coordinates.y =
+          e.key === "ArrowUp"
+            ? selectedArtBoard.coordinates.y - 1
+            : selectedArtBoard.coordinates.y + 1;
+        updateArtBoard(selectedArtBoard);
+      } else if (selectedComponent !== null) {
+        selectedComponent.coordinates.y =
+          e.key === "ArrowUp"
+            ? selectedComponent.coordinates.y - 1
+            : selectedComponent.coordinates.y + 1;
+      }
+    } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+      if (selectedArtBoard !== null) {
+        selectedArtBoard.coordinates.x =
+          e.key === "ArrowLeft"
+            ? selectedArtBoard.coordinates.x - 1
+            : selectedArtBoard.coordinates.x + 1;
+        updateArtBoard(selectedArtBoard);
+      } else if (selectedComponent !== null) {
+        selectedComponent.coordinates.x =
+          e.key === "ArrowLeft"
+            ? selectedComponent.coordinates.x - 1
+            : selectedComponent.coordinates.x + 1;
+      }
     }
-    // TODO: move artboard with arrow keys
   };
+
+  const showContextMenu = (coordinates: Coordinates) =>
+    setContextMenu({ kind: "canvas", coordinates });
 
   return (
     <div onKeyDown={handleOnKeyDown} tabIndex={1}>
