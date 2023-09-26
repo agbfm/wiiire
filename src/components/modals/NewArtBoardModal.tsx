@@ -16,7 +16,7 @@ const NewArtBoardModal = (props: Props) => {
   const ref = useRef<HTMLInputElement>(null);
 
   // artboards
-  const { addArtBoard } = useArtBoardActions();
+  const { addArtBoard, selectArtBoard } = useArtBoardActions();
 
   // components
   const { addComponent } = useComponentActions();
@@ -48,6 +48,8 @@ const NewArtBoardModal = (props: Props) => {
     const artBoard: ArtBoard = createArtBoard(title);
     addArtBoard(artBoard);
     artBoard.components.forEach((c: IComponent) => addComponent(c));
+    selectArtBoard(artBoard);
+
     handleOnCloseClick();
   };
 
