@@ -1,20 +1,30 @@
 import { MouseEvent, useState } from "react";
-import MenuPanel from "../components/panels/MenuPanel";
-import Canvas from "./../components/Canvas";
-import ContextMenu from "./../components/ContextMenu";
-import NewArtBoardModal from "../components/modals/NewArtBoardModal";
-import LibraryPanel from "../components/panels/LibraryPanel";
-import { useContextMenu } from "./../stores/useContextMenuStore";
-import { ButtonContextMenu } from "../components/components/button/ButtonContextMenu";
-import { ButtonContextMenuConfig } from "../types/button";
+import MenuPanel from "@/components/panels/MenuPanel";
+import Canvas from "@/components/Canvas";
+import ContextMenu from "@/components/ContextMenu";
+import NewArtBoardModal from "@/components/modals/NewArtBoardModal";
+import LibraryPanel from "@/components/panels/LibraryPanel";
+import { useContextMenu } from "@/stores/useContextMenuStore";
+import { ButtonContextMenu } from "@/components/components/button/ButtonContextMenu";
+import { ButtonContextMenuConfig } from "@/types/button";
+import { useSelectedArtBoard } from "@/stores/useArtBoardStore";
 
 const WiiireApp = () => {
+  // artboards
+  const selectedArtBoard = useSelectedArtBoard();
+
+  // context menu
   const contextMenu = useContextMenu();
 
+  // local state
   const [showMenu, toggleMenu] = useState(true);
   const [showLibrary, toggleLibrary] = useState(true);
   const [zoom, setZoom] = useState(100);
   const [showNewArtBoardModal, toggleNewArtBoardModal] = useState(false);
+
+  if (showLibrary && selectedArtBoard === null) {
+    toggleLibrary(false);
+  }
 
   const handleCloseModal = () => toggleNewArtBoardModal(false);
 

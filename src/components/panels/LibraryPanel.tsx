@@ -22,7 +22,7 @@ type Props = {
   onToggle: (value: boolean) => void;
 };
 
-const LibraryPanel = (props: Props) => {
+const LibraryPanel = ({ visible, onToggle }: Props) => {
   const libraryDemoLabel = useMemo(
     () => demoLabel("Label", { x: 70, y: 55 }),
     []
@@ -44,7 +44,7 @@ const LibraryPanel = (props: Props) => {
   return (
     <Affix position={{ top: rem(16), bottom: rem(16), right: rem(16) }}>
       <Transition
-        mounted={props.visible}
+        mounted={visible}
         transition="slide-left"
         duration={300}
         timingFunction="ease"
@@ -65,7 +65,7 @@ const LibraryPanel = (props: Props) => {
               </Title>
               <CloseButton
                 aria-label="Close Library Panel"
-                onClick={() => props.onToggle(false)}
+                onClick={() => onToggle(false)}
               />
             </Flex>
             <Flex
