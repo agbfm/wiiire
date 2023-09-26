@@ -11,6 +11,7 @@ import {
 } from "@/stores/useArtBoardStore";
 import { ContextMenuConfig } from "@/types/context-menu";
 import { useContextMenuActions } from "@/stores/useContextMenuStore";
+import { useComponentActions } from "@/stores/useComponentStore";
 
 type Props = {
   config: ContextMenuConfig;
@@ -19,17 +20,23 @@ type Props = {
 };
 
 const ContextMenu = ({ config, visible, onNewArtBoard }: Props) => {
-  const { setContextMenu } = useContextMenuActions();
-
+  // artboards
   const selectedArtBoard = useSelectedArtBoard();
   const { duplicateArtBoard, removeArtBoard, removeAllArtBoards } =
     useArtBoardActions();
+
+  //components
+  const { removeComponent } = useComponentActions();
+
+  // context menu
+  const { setContextMenu } = useContextMenuActions();
 
   const handleOnDeleteArtBoard = () => {
     if (selectedArtBoard === null) {
       return;
     }
 
+    selectedArtBoard.components.forEach((c) => removeComponent(c));
     removeArtBoard(selectedArtBoard);
   };
 

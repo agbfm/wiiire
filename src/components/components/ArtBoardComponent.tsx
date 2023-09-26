@@ -42,9 +42,19 @@ const ArtBoardComponent = ({ artBoard }: Props) => {
   const showHorizontalGuideline = false;
   const showVerticalGuideline = false;
 
-  const handleClick = () => handleOnSelect();
-  const handleDragStart = () => handleOnSelect();
+  const handleClick = () => {
+    handleOnSelect();
+  };
+
+  const handleDragStart = () => {
+    handleOnSelect();
+  };
+
   const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
+    if (selectArtBoard === null) {
+      return;
+    }
+
     const coordinates = { x: e.target.x(), y: e.target.y() };
     setCoords(coordinates);
 

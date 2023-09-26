@@ -44,17 +44,27 @@ const TransformerGroup = ({
   // selected component
   const selectedComponent = useSelectedComponent();
   const { selectComponent } = useComponentActions();
+
+  // local state
   const [coords, setCoords] = useState(component.coordinates);
+  const [dragging, toggleDragging] = useState(false);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
+    e.cancelBubble = true;
     if (!selectable) {
       e.evt.preventDefault();
       return;
     }
 
-    e.cancelBubble = true;
+    if (dragging) {
+      return;
+    }
 
-    if (ref?.current && transformerRef?.current) {
+    if (
+      ref?.current &&
+      transformerRef?.current &&
+      selectedComponent !== component
+    ) {
       if (selectedArtBoard !== null) {
         selectArtBoard(null);
       }
@@ -82,13 +92,23 @@ const TransformerGroup = ({
     }
   };
 
-  const handleDragMove = (e: KonvaEventObject<DragEvent>) => {
+  const handleDragStart = (e: KonvaEventObject<DragEvent>) => {
+    e.cancelBubble = true;
     if (!draggable) {
       e.evt.preventDefault();
       return;
     }
 
+    toggleDragging(true);
+  };
+
+  const handleDragMove = (e: KonvaEventObject<DragEvent>) => {
     e.cancelBubble = true;
+    if (!draggable) {
+      e.evt.preventDefault();
+      return;
+    }
+
     // const desiredCoords = { x: e.target.x(), y: e.target.y() };
     // const finalCoords = onDragMove(
     //   dimensions.height,
@@ -105,17 +125,16 @@ const TransformerGroup = ({
   };
 
   const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
+    e.cancelBubble = true;
     if (!draggable) {
       e.evt.preventDefault();
       return;
     }
 
-    e.cancelBubble = true;
-
     const coordinates = { x: e.target.x(), y: e.target.y() };
     setCoords(coordinates);
 
-    // onDragEnd();
+    toggleDragging(false);
   };
 
   const toggleContextMenu = (coordinates: Coordinates | null) => {
@@ -139,15 +158,22 @@ const TransformerGroup = ({
       <Group
         ref={ref}
         draggable={draggable}
-        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
         onDragMove={handleDragMove}
+        onDragEnd={handleDragEnd}
         onMouseDown={handleMouseDown}
         x={coords.x}
         y={coords.y}
       >
         {children}
       </Group>
-      <Transformer ref={transformerRef} />
+      <Transformer
+        ref={transformerRef}
+        onDragStart={(e: KonvaEventObject<DragEvent>) => e.evt.preventDefault()}
+        onDragMove={(e: KonvaEventObject<DragEvent>) => e.evt.preventDefault()}
+        onDragEnd={(e: KonvaEventObject<DragEvent>) => e.evt.preventDefault()}
+        onMouseDown={handleMouseDown}
+      />
     </>
   );
 };
