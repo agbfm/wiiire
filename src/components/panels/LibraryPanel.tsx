@@ -16,6 +16,12 @@ import { LabelComponent } from "../components/LabelComponent";
 import { LibraryPlaceholder } from "../components/LibraryPlaceholder";
 import { CardComponent } from "../components/CardComponent";
 import { ImageComponent } from "../components/ImageComponent";
+import { IComponent } from "@/types/component";
+import { useComponentActions } from "@/stores/useComponentStore";
+import {
+  useArtBoardActions,
+  useSelectedArtBoard,
+} from "@/stores/useArtBoardStore";
 
 type Props = {
   visible: boolean;
@@ -23,6 +29,13 @@ type Props = {
 };
 
 const LibraryPanel = ({ visible, onToggle }: Props) => {
+  // artboards
+  const selectedArtBoard = useSelectedArtBoard();
+  const { updateArtBoard } = useArtBoardActions();
+
+  //components
+  const { addComponent } = useComponentActions();
+
   const libraryDemoLabel = useMemo(
     () => demoLabel("Label", { x: 70, y: 55 }),
     []
@@ -40,6 +53,22 @@ const LibraryPanel = ({ visible, onToggle }: Props) => {
     () => demoImage({ x: 54, y: 24 }, { height: 80, width: 80 }),
     []
   );
+
+  const handleComponentClick = (c: IComponent) => {
+    if (selectedArtBoard === null) {
+      return;
+    }
+
+    const x = (selectedArtBoard.dimensions.width - c.dimensions.width) / 2;
+    const y = (selectedArtBoard.dimensions.height - c.dimensions.height) / 2;
+    const component: IComponent = {
+      ...c,
+      coordinates: { x, y },
+    };
+    addComponent(component);
+    selectedArtBoard.components.push(component);
+    updateArtBoard(selectedArtBoard);
+  };
 
   return (
     <Affix position={{ top: rem(16), bottom: rem(16), right: rem(16) }}>
@@ -87,7 +116,7 @@ const LibraryPanel = ({ visible, onToggle }: Props) => {
                   <LibraryPlaceholder
                     coordinates={{ x: 4, y: 4 }}
                     dimensions={{ height: 120, width: 180 }}
-                    onClick={() => console.log("label placeholder clicked")}
+                    onClick={() => handleComponentClick(libraryDemoCardLabel)}
                   >
                     <LabelComponent
                       label={libraryDemoLabel}
@@ -98,7 +127,7 @@ const LibraryPanel = ({ visible, onToggle }: Props) => {
                   <LibraryPlaceholder
                     coordinates={{ x: 214, y: 4 }}
                     dimensions={{ height: 120, width: 180 }}
-                    onClick={() => console.log("button placeholder clicked")}
+                    onClick={() => handleComponentClick(libraryDemoButton)}
                   >
                     <ButtonComponent
                       button={libraryDemoButton}
@@ -109,7 +138,7 @@ const LibraryPanel = ({ visible, onToggle }: Props) => {
                   <LibraryPlaceholder
                     coordinates={{ x: 4, y: 144 }}
                     dimensions={{ height: 120, width: 180 }}
-                    onClick={() => console.log("card placeholder clicked")}
+                    onClick={() => handleComponentClick(libraryDemoCard)}
                   >
                     <CardComponent
                       card={libraryDemoCard}
@@ -125,7 +154,7 @@ const LibraryPanel = ({ visible, onToggle }: Props) => {
                   <LibraryPlaceholder
                     coordinates={{ x: 214, y: 144 }}
                     dimensions={{ height: 120, width: 180 }}
-                    onClick={() => console.log("image placeholder clicked")}
+                    onClick={() => handleComponentClick(libraryDemoImage)}
                   >
                     <ImageComponent
                       image={libraryDemoImage}
