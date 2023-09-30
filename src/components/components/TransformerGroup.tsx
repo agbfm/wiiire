@@ -151,6 +151,13 @@ const TransformerGroup = ({
 
   if (selectedComponent === null || selectedComponent.id !== component.id) {
     transformerRef?.current?.nodes([]);
+  } else if (
+    selectedComponent !== null &&
+    selectedComponent.id === component.id &&
+    transformerRef?.current?.nodes.length === 0 &&
+    ref?.current !== null
+  ) {
+    transformerRef.current.nodes([ref.current]);
   }
 
   return (
