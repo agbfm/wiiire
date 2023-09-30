@@ -51,7 +51,7 @@ const ArtBoardComponent = ({ artBoard }: Props) => {
   };
 
   const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
-    if (selectArtBoard === null) {
+    if (selectedArtBoard === null) {
       return;
     }
 
