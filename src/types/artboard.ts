@@ -1,10 +1,10 @@
-import { Coordinates } from "./coordinates";
+import { IComponent } from "./component";
 
-export interface ArtBoard {
-  id: string;
-  coordinates: Coordinates;
+export interface ArtBoard extends IComponent {
+  kind: "artboard";
   size: ArtBoardSize;
   title: string;
+  components: IComponent[];
 }
 
 export const enum ArtBoardSize {

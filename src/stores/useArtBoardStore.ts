@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { ArtBoard } from "./../types/artboard";
-import { duplicateArtBoard } from "../utils/artboards";
+import { ArtBoard } from "@/types/artboard";
+import { duplicateArtBoard } from "@/utils/artboards";
 
 export interface ArtBoardState {
   artBoards: ArtBoard[];
@@ -76,6 +76,12 @@ const useArtBoardStore = create<ArtBoardState>()(
     )
   )
 );
+
+export const useArtBoard = (id: string): ArtBoard | null =>
+  useArtBoardStore(
+    (state: ArtBoardState) =>
+      state.artBoards.find((a: ArtBoard) => a.id === id) || null
+  );
 
 export const useArtBoards = (): ArtBoard[] =>
   useArtBoardStore((state: ArtBoardState) => state.artBoards);

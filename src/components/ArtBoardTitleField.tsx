@@ -1,7 +1,7 @@
 import { TextInput } from "@mantine/core";
 import { ChangeEvent, useState } from "react";
-import { useArtBoardActions } from "./../stores/useArtBoardStore";
-import { ArtBoard } from "./../types/artboard";
+import { useArtBoardActions } from "@/stores/useArtBoardStore";
+import { ArtBoard } from "@/types/artboard";
 
 type Props = {
   artBoard: ArtBoard;

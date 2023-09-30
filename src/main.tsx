@@ -5,7 +5,19 @@ import WiiireApp from "./app/WiiireApp.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        fontFamily: "'Roboto Mono', monospace",
+        headings: {
+          fontWeight: "600",
+          sizes: {
+            h1: { fontWeight: "900" },
+          },
+        },
+      }}
+    >
       <WiiireApp />
     </MantineProvider>
   </StrictMode>

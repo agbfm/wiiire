@@ -23,9 +23,9 @@ bun dev
 - [x] Drag, duplicate & delete objects
 - [ ] Drag, scroll & zoom the canvas
 - [x] Implement state with [Zustand](https://github.com/pmndrs/zustand)
-- [ ] Create a small library of UI components (buttons, labels, images & cards etc)
+- [x] Create a small library of UI components (buttons, labels, images & cards etc)
 - [ ] Export to JSON file
-- [ ] Cypress tests
+- [ ] Tests
 - [ ] Dockerfile
 - [ ] Docker Compose file
 
