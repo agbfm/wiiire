@@ -9,6 +9,7 @@ import {
   Transition,
 } from "@mantine/core";
 import { Layer, Stage } from "react-konva";
+import { v4 as uuid } from "uuid";
 import { ButtonComponent } from "../components/button/ButtonComponent";
 import { demoButton, demoCard, demoImage, demoLabel } from "@/utils/faker";
 import { useMemo } from "react";
@@ -63,6 +64,7 @@ const LibraryPanel = ({ visible, onToggle }: Props) => {
     const y = (selectedArtBoard.dimensions.height - c.dimensions.height) / 2;
     const component: IComponent = {
       ...c,
+      id: uuid(),
       coordinates: { x, y },
     };
     addComponent(component);
