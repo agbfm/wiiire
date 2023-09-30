@@ -18,11 +18,16 @@ import { LibraryPlaceholder } from "../components/LibraryPlaceholder";
 import { CardComponent } from "../components/CardComponent";
 import { ImageComponent } from "../components/ImageComponent";
 import { IComponent } from "@/types/component";
-import { useComponentActions } from "@/stores/useComponentStore";
+import {
+  useComponentActions,
+  useSelectedComponent,
+} from "@/stores/useComponentStore";
 import {
   useArtBoardActions,
+  useArtBoards,
   useSelectedArtBoard,
 } from "@/stores/useArtBoardStore";
+import { ArtBoard } from "@/types/artboard";
 
 type Props = {
   visible: boolean;
@@ -31,11 +36,13 @@ type Props = {
 
 const LibraryPanel = ({ visible, onToggle }: Props) => {
   // artboards
+  const artBoards = useArtBoards();
   const selectedArtBoard = useSelectedArtBoard();
-  const { updateArtBoard } = useArtBoardActions();
+  const { selectArtBoard, updateArtBoard } = useArtBoardActions();
 
   //components
-  const { addComponent } = useComponentActions();
+  const selectedComponent = useSelectedComponent();
+  const { addComponent, selectComponent } = useComponentActions();
 
   const libraryDemoLabel = useMemo(
     () => demoLabel("Label", { x: 70, y: 55 }),
@@ -56,20 +63,35 @@ const LibraryPanel = ({ visible, onToggle }: Props) => {
   );
 
   const handleComponentClick = (c: IComponent) => {
-    if (selectedArtBoard === null) {
+    let artBoard;
+    if (selectedArtBoard !== null) {
+      artBoard = selectedArtBoard;
+    } else if (selectedComponent !== null) {
+      artBoard = artBoards.find((a: ArtBoard) =>
+        a.components.some(({ id }: IComponent) => id === selectedComponent.id)
+      );
+    }
+
+    if (!artBoard) {
+      console.error(
+        "Unable to determine which art board to add the component to"
+      );
       return;
     }
 
-    const x = (selectedArtBoard.dimensions.width - c.dimensions.width) / 2;
-    const y = (selectedArtBoard.dimensions.height - c.dimensions.height) / 2;
+    const x = (artBoard.dimensions.width - c.dimensions.width) / 2;
+    const y = (artBoard.dimensions.height - c.dimensions.height) / 2;
     const component: IComponent = {
       ...c,
       id: uuid(),
       coordinates: { x, y },
     };
     addComponent(component);
-    selectedArtBoard.components.push(component);
-    updateArtBoard(selectedArtBoard);
+    artBoard.components.push(component);
+    updateArtBoard(artBoard);
+
+    selectComponent(component);
+    selectArtBoard(null);
   };
 
   return (
