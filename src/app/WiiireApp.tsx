@@ -8,10 +8,14 @@ import { useContextMenu } from "@/stores/useContextMenuStore";
 import { ButtonContextMenu } from "@/components/components/button/ButtonContextMenu";
 import { ButtonContextMenuConfig } from "@/types/button";
 import { useSelectedArtBoard } from "@/stores/useArtBoardStore";
+import { useSelectedComponent } from "@/stores/useComponentStore";
 
 const WiiireApp = () => {
   // artboards
   const selectedArtBoard = useSelectedArtBoard();
+
+  // components
+  const selectedComponent = useSelectedComponent();
 
   // context menu
   const contextMenu = useContextMenu();
@@ -22,7 +26,7 @@ const WiiireApp = () => {
   const [zoom, setZoom] = useState(100);
   const [showNewArtBoardModal, toggleNewArtBoardModal] = useState(false);
 
-  if (showLibrary && selectedArtBoard === null) {
+  if (showLibrary && selectedArtBoard === null && selectedComponent === null) {
     toggleLibrary(false);
   }
 
