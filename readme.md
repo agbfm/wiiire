@@ -25,6 +25,7 @@ bun dev
 - [x] Implement state with [Zustand](https://github.com/pmndrs/zustand)
 - [x] Create a small library of UI components (buttons, labels, images & cards etc)
 - [ ] Export to JSON file
+- [ ] [PWA](https://vite-pwa-org.netlify.app/)
 - [ ] Tests
 - [ ] Dockerfile
 - [ ] Docker Compose file
